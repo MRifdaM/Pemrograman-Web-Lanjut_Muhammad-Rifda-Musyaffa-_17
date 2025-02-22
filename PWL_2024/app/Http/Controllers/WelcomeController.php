@@ -11,4 +11,10 @@ class WelcomeController extends Controller
         return 'Hello World';
     }
 
+    //menambahkan method greeting() yang akan mengembalikan view dengan nama hello.blade.php dan mengirim data name ke view tersebut
+    public function greeting(){
+        return view('blog.hello', ['name' => 'Muhammad Rifda Musyaffa\'']);
+    }
+
+
 }

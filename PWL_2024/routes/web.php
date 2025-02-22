@@ -123,7 +123,10 @@ Route::resource('photos', PhotoController::class)->except([
 
 //---------------------------------------------Routing View----------------------------------------
 //membuat route '/greeting' yang menampilkan view hello.blade.php dan mengirimkan data 'name' dengan nilai 'Muhammad Rifda Musyaffa'
-Route::get('/greeting', function () {
-    return view('hello', ['name' => 'Muhammad Rifda Musyaffa\'']);
-});
+// Route::get('/greeting', function () {
+//     return view('hello', ['name' => 'Muhammad Rifda Musyaffa\'']);
+// });
+
+//membuat route '/greeting' yang mengarahkan ke controller WelcomeController dengan method greeting()
+Route::get('/greeting', [WelcomeController::class,'greeting']);
 
