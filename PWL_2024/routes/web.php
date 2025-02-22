@@ -35,9 +35,9 @@ Route::get('/about', function () {
 
 
 //-------------------------------Routing Parameters-------------------------------
-Route::get('/user/{name}', function ($name) {
-    return 'Nama saya '.$name;
-});
+// Route::get('/user/{name}', function ($name) {
+//     return 'Nama saya '.$name;
+// });
 
 //Route dengan parameter lebih dari satu
 Route::get('/posts/{post}/comments/{comment}', function ($postId, $commentId) {
@@ -47,4 +47,22 @@ Route::get('/posts/{post}/comments/{comment}', function ($postId, $commentId) {
 //Membuat route '/articles/{id}' yang menampilkan pesan 'Halaman artikel dengan ID'
 Route::get('/articles/{id}', function ($id) {
     return 'Halaman artikel dengan ID '.$id;
+});
+
+
+//-----------------------------Routing Optional Parameters-------------------------
+
+/*membuat route /user sekaligus mengirimkan parameter berupa nama user $name dimana parameternya bersifat opsional
+* karena $name memiliki nilai default
+*/
+
+// Route::get('/user/{name?}', function ($name=null) {
+//     return 'Nama saya '.$name;
+// });
+
+/*merubah route /user/{name?}'dimana parameternya akan memiliki nilai default 'John'
+*yang digunakan saat tidak ada nilai parameter yang diberikan dari URL
+*/
+Route::get('/user/{name?}', function ($name='John') {
+    return 'Nama saya '.$name;
 });
