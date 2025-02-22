@@ -119,3 +119,11 @@ Route::resource('photos', PhotoController::class)->only([
 Route::resource('photos', PhotoController::class)->except([
     'create', 'store', 'update', 'destroy'
 ]);
+
+
+//---------------------------------------------Routing View----------------------------------------
+//membuat route '/greeting' yang menampilkan view hello.blade.php dan mengirimkan data 'name' dengan nilai 'Muhammad Rifda Musyaffa'
+Route::get('/greeting', function () {
+    return view('hello', ['name' => 'Muhammad Rifda Musyaffa\'']);
+});
+
