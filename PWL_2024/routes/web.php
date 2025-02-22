@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,9 +18,9 @@ use Illuminate\Support\Facades\Route;
 //-------------------------------Basic Routing----------------------------------
 
 //Membuat route '/' yang menampilkan pesan 'Selamat Datang'
-Route::get('/', function () {
-    return 'Selamat Datang';
-});
+// Route::get('/', function () {
+//     return 'Selamat Datang';
+// });
 
 // Route::get('/hello', function () {
 //     return 'Hello World';
@@ -30,9 +31,9 @@ Route::get('/world', function () {
 });
 
 //Membuat route '/' yang menampilkan pesan NIM dan Nama
-Route::get('/about', function () {
-    return 'NIM : 2341720028 <br> Nama : Muhammad Rifda Musyaffa\'';
-});
+// Route::get('/about', function () {
+//     return 'NIM : 2341720028 <br> Nama : Muhammad Rifda Musyaffa\'';
+// });
 
 
 //-------------------------------Routing Parameters-------------------------------
@@ -46,9 +47,9 @@ Route::get('/posts/{post}/comments/{comment}', function ($postId, $commentId) {
 });
 
 //Membuat route '/articles/{id}' yang menampilkan pesan 'Halaman artikel dengan ID'
-Route::get('/articles/{id}', function ($id) {
-    return 'Halaman artikel dengan ID '.$id;
-});
+// Route::get('/articles/{id}', function ($id) {
+//     return 'Halaman artikel dengan ID '.$id;
+// });
 
 
 //-----------------------------Routing Optional Parameters-------------------------
@@ -75,3 +76,18 @@ Route::get('/user/{name?}', function ($name='John') {
 *dan method hello()
 */
 Route::get('/hello', [WelcomeController::class, 'hello']);
+
+/*Membuat route dengan URL '/' yang akan mengakses/mengarahkan ke controller PageController
+*dan method index()
+*/
+Route::get('/', [PageController::class, 'index']);
+
+/*Membuat route dengan URL '/about' yang akan mengakses/mengarahkan ke controller PageController
+*dan method about()
+*/
+Route::get('/about', [PageController::class, 'about']);
+
+/*Membuat route dengan URL '/articles/{id}' yang akan mengakses/mengarahkan ke controller PageController
+*dan method articles()
+*/
+Route::get('/articles/{id}', [PageController::class, 'articles']);
