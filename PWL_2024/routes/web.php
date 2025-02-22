@@ -4,6 +4,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -103,3 +104,18 @@ Route::get('/about', [AboutController::class, 'about']);
 
 //membuat route articles yang mengarahkan ke controller ArticleController dengan method articles()
 Route::get('/articles/{id}', [ArticleController::class, 'articles']);
+
+
+//----------------------------------Routing Resource Controller-------------------------------------
+//membuat routing untuk resouce controller PhotoController
+Route::resource('photos', PhotoController::class);
+
+//method only() digunakan untuk memilih route tertentu yang ingin digunakan.
+Route::resource('photos', PhotoController::class)->only([
+    'index', 'show'
+]);
+
+//method except() digunakan untuk mengecualikan route tertentu yang tidak ingin digunakan.
+Route::resource('photos', PhotoController::class)->except([
+    'create', 'store', 'update', 'destroy'
+]);
