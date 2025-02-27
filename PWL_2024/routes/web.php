@@ -130,3 +130,50 @@ Route::resource('photos', PhotoController::class)->except([
 //membuat route '/greeting' yang mengarahkan ke controller WelcomeController dengan method greeting()
 Route::get('/greeting', [WelcomeController::class,'greeting']);
 
+
+//---------------------------------------------Routing Name----------------------------------------
+// Route::get('/user/profile', function () {
+//     //
+//    })->name('profile');
+//    Route::get(
+//     '/user/profile',
+//     [UserProfileController::class, 'show']
+//    )->name('profile');
+//    // Generating URLs...
+//    $url = route('profile');
+//    // Generating Redirects...
+//    return redirect()->route('profile');
+
+
+//---------------------------------------------Routing Group----------------------------------------
+// Route::middleware(['first', 'second'])->group(function () {
+//     Route::get('/', function () {
+//     // Uses first & second middleware...
+//     });
+//    Route::get('/user/profile', function () {
+//     // Uses first & second middleware...
+//     });
+//    });
+//    Route::domain('{account}.example.com')->group(function () {
+//     Route::get('user/{id}', function ($account, $id) {
+//     //
+//     });
+//    });
+//    Route::middleware('auth')->group(function () {
+//    Route::get('/user', [UserController::class, 'index']);
+//    Route::get('/post', [PostController::class, 'index']);
+//    Route::get('/event', [EventController::class, 'index']);
+//    });
+
+
+//---------------------------------------------Routing Prefix----------------------------------------
+// Route::prefix('admin')->group(function () {
+//     Route::get('/user', [UserController::class, 'index']);
+//     Route::get('/post', [PostController::class, 'index']);
+//     Route::get('/event', [EventController::class, 'index']);
+//  });
+
+
+//---------------------------------------------View Routing----------------------------------------
+// Route::view('/welcome', 'welcome');
+// Route::view('/welcome', 'welcome', ['name' => 'Taylor']);
