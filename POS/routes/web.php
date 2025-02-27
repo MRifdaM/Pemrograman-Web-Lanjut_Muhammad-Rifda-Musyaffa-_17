@@ -17,15 +17,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::prefix('category')->group(function () {
-    Route::get('/food-beverage', [CategoryController::class, 'foodBeverage']);
-    Route::get('/beauty-health', [CategoryController::class, 'beautyHealth']);
-    Route::get('/home-care', [CategoryController::class, 'homeCare']);
-    Route::get('/baby-kid', [CategoryController::class, 'babyKid']);
+    Route::get('/food-beverage', [CategoryController::class, 'foodBeverage'])
+        ->name('food-beverage');
+    Route::get('/beauty-health', [CategoryController::class, 'beautyHealth'])
+        ->name('beauty-health');
+    Route::get('/home-care', [CategoryController::class, 'homeCare'])
+        ->name('home-care');
+    Route::get('/baby-kid', [CategoryController::class, 'babyKid'])
+        ->name('baby-kid');
 });
 
-Route::get('/user/{id}/name/{name}', [UserController::class, 'profile']);
 
-Route::get('/penjualan', [SaleController::class, 'index']);
+Route::get('/user/{id}/name/{name}', [UserController::class, 'profile'])->name('user');
+
+Route::get('/penjualan', [SaleController::class, 'index'])->name('sale');
