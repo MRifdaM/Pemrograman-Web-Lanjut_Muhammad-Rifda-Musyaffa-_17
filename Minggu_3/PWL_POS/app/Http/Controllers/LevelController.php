@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 class LevelController extends Controller
 {
     public function index(){
+        //Menggunakan DB FACADES
         // DB::insert('insert into m_level(level_kode, level_nama, created_at) values(?, ?, ?)', ['CUS', 'Pelanggan', now()]); //menambahkan data baru ke tabel m_level menggunakan query parameter
         // return 'Insert data baru berhasil';
 
