@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        #commit ulang dikarenakan belum melakukan commit untuk Praktikum 2.1
         Schema::create('m_level', function (Blueprint $table) {
             $table->id('level_id');
             $table->string('level_kode', 10)->unique();//menambahkan kolom level_kode dengan tipe data varchar dengan panjang 10 karakter serta manambahkan constraint unique pada kolom kevek_kode
