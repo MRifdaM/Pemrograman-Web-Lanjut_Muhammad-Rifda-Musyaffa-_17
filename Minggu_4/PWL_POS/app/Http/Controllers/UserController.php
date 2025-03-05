@@ -59,7 +59,8 @@ class UserController extends Controller
 
             //-------------------------------------------------Praktikum 2.1------------------------------------------------------
 
-            $user = UserModel::find(1); //Mencari data pengguna dengan primary key ID = 1 di dalam database menggunakan Eloquent ORM
+            // $user = UserModel::find(1); //Mencari data pengguna dengan primary key ID = 1 di dalam database menggunakan Eloquent ORM
+            $user = UserModel::where('level_id', 1)->first(); //Mengambil satu data pertama dari tabel yang memiliki level_id = 1 menggunakan Eloquent
             return view('user', ['data' => $user]);
     }
 }
