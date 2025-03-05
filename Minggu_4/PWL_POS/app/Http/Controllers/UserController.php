@@ -37,13 +37,21 @@ class UserController extends Controller
 
             //----------------------------------------------------Jobsheet 4 - Eloquent ORM--------------------------------------------------
             //Menambahkan kode untuk menambahkan data baru
+            // $data = [
+            //     'level_id' => 2,
+            //     'username' => 'manager_dua',
+            //     'nama' => 'Manager Dua',
+            //     'password' => Hash::make('12345')
+            // ];
+
+            //Merubah nilai pada kolom username dan nama untuk kolom password yg tidak termasuk ke dalam variabel $fillable
             $data = [
                 'level_id' => 2,
-                'username' => 'manager_dua',
-                'nama' => 'Manager Dua',
+                'username' => 'manager_tiga',
+                'nama' => 'Manager Tiga',
                 'password' => Hash::make('12345')
             ];
-            UserModel::create($data);
+            UserModel::create($data); //akan error karena kolom password bukan termasuk kolom 
 
             $user = UserModel::all();
             return view('user', ['data' => $user]);
