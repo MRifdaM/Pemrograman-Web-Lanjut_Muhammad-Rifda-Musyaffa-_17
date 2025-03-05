@@ -12,14 +12,24 @@
             <th>Nama</th>
             <th>ID Level Pengguna</th>
         </tr>
-        @foreach ($data as $d)
+        {{-- -----------------------------------Jobsheet 3-------------------------------------------- --}}
+        {{-- Menampilkan array asoc dengan lebih dari 1 data  --}}
+        {{-- @foreach ($data as $d)
         <tr>
             <td>{{ $d->user_id }}</td>
             <td>{{ $d->username }}</td>
             <td>{{ $d->nama }}</td>
             <td>{{ $d->level_id }}</td>
         </tr>
-        @endforeach
+        @endforeach --}}
+
+        {{-- -----------------------------------Jobsheet 4-------------------------------------------- --}}
+        {{-- ---------------------------------Praktikum 2.1-------------------------------------------- --}}
+        {{-- Menampilkan array asoc dengan 1 data  --}}
+        <td>{{ $data->user_id }}</td>
+        <td>{{ $data->username }}</td>
+        <td>{{ $data->nama }}</td>
+        <td>{{ $data->level_id }}</td>
     </table>
 </body>
 </html>

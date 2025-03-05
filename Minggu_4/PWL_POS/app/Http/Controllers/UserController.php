@@ -36,6 +36,7 @@ class UserController extends Controller
             // return view('user', ['data' => $user]);
 
             //----------------------------------------------------Jobsheet 4 - Eloquent ORM--------------------------------------------------
+            //-------------------------------------------------Praktikum 1------------------------------------------------------
             //Menambahkan kode untuk menambahkan data baru
             // $data = [
             //     'level_id' => 2,
@@ -45,15 +46,20 @@ class UserController extends Controller
             // ];
 
             //Merubah nilai pada kolom username dan nama untuk kolom password yg tidak termasuk ke dalam variabel $fillable
-            $data = [
-                'level_id' => 2,
-                'username' => 'manager_tiga',
-                'nama' => 'Manager Tiga',
-                'password' => Hash::make('12345')
-            ];
-            UserModel::create($data); //akan error karena kolom password bukan termasuk kolom 
+            // $data = [
+            //     'level_id' => 2,
+            //     'username' => 'manager_tiga',
+            //     'nama' => 'Manager Tiga',
+            //     'password' => Hash::make('12345')
+            // ];
+            // UserModel::create($data); //akan error karena kolom password bukan termasuk kolom
 
-            $user = UserModel::all();
+            // $user = UserModel::all();
+            // return view('user', ['data' => $user]);
+
+            //-------------------------------------------------Praktikum 2.1------------------------------------------------------
+
+            $user = UserModel::find(1); //Mencari data pengguna dengan primary key ID = 1 di dalam database menggunakan Eloquent ORM
             return view('user', ['data' => $user]);
     }
 }
