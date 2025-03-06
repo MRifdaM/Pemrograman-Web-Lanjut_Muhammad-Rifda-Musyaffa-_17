@@ -156,25 +156,44 @@ class UserController extends Controller
             // dd($user->isDirty());
 
 
-            $user = UserModel::create([
-                'username' => 'manager11',
-                'nama' => 'Manager11',
-                'password' => Hash::make('12345'),
-                'level_id' => 2,
-            ]);
+            // $user = UserModel::create([
+            //     'username' => 'manager11',
+            //     'nama' => 'Manager11',
+            //     'password' => Hash::make('12345'),
+            //     'level_id' => 2,
+            // ]);
 
-            $user->username = 'manager12';
+            // $user->username = 'manager12';
 
-            $user->save();
+            // $user->save();
 
-            //wasChanged() digunakan untuk mengecek apakah perubahan benar-benar disimpan ke database setelah save().
+            // //wasChanged() digunakan untuk mengecek apakah perubahan benar-benar disimpan ke database setelah save().
 
-            $user->wasChanged(); // true
-            $user->wasChanged('username'); // true
-            $user->wasChanged(['username', 'level_id']); // true
-            $user->wasChanged('nama'); // false
-            dd($user->wasChanged(['nama', 'username'])); // true
+            // $user->wasChanged(); // true
+            // $user->wasChanged('username'); // true
+            // $user->wasChanged(['username', 'level_id']); // true
+            // $user->wasChanged('nama'); // false
+            // dd($user->wasChanged(['nama', 'username'])); // true
 
+            //---------------------------------------------------------Praktikum 2.6--------------------------------------------------
+            $user = UserModel::all();
             return view('user', ['data' => $user]);
     }
+
+    public function tambah(){
+        return view('user_tambah');
+    }
+
+    public function tambah_simpan(Request $request) //Fungsi ini menerima request dari form yang dikirim oleh pengguna.
+    {
+        UserModel::create([
+            'username' => $request->username,
+            'nama' => $request->nama,
+            'password' => Hash::make('$request->password'),
+            'level_id' => $request->level_id
+        ]);
+
+        return redirect('/user');
+    }
+
 }
