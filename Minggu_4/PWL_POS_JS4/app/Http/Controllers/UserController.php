@@ -99,14 +99,32 @@ class UserController extends Controller
             //     ]
             // );
 
-            $user = UserModel::firstOrCreate(//Akan melakukan insert data, karena data pada kode ini belum ada di database
+            // $user = UserModel::firstOrCreate(//Akan melakukan insert data, karena data pada kode ini belum ada di database
+            //     [
+            //         'username' => 'manager22',
+            //         'nama' => 'Manager Dua Dua',
+            //         'password' => Hash::make('12345'),
+            //         'level_id' => 2
+            //     ]
+            // );
+
+            // $user = UserModel::firstOrNew(//Digunakan untuk mencari data pertama berdasarkan kondisi yang diberikan. Jika data ditemukan, Laravel mengembalikan object model yang sudah ada.
+            //                               //Namun, jika data tidak ditemukan, Laravel akan membuat object model baru tetapi tidak langsung menyimpannya ke database. harus memanggil $model->save(); secara manual jika ingin menyimpannya.
+            //     [
+            //         'username' => 'manager',
+            //         'nama' => 'Manager'
+            //     ]
+            // );
+
+            $user = UserModel::firstOrNew(
                 [
-                    'username' => 'manager22',
-                    'nama' => 'Manager Dua Dua',
+                    'username' => 'manager33',
+                    'nama' => 'Manager Tiga Tiga',
                     'password' => Hash::make('12345'),
                     'level_id' => 2
                 ]
             );
+            $user->save(); //Menyimpan data ke database
             return view('user', ['data' => $user]);
     }
 }
