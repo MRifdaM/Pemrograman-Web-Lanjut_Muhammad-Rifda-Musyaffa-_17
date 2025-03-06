@@ -126,35 +126,54 @@ class UserController extends Controller
             // );
             // $user->save(); //Menyimpan data ke database
             //---------------------------------------------------Praktikum 2.5-------------------------------------------------------
+            // $user = UserModel::create([
+            //     'username' => 'manager55',
+            //     'nama' => 'Manager55',
+            //     'password' => Hash::make('12345'),
+            //     'level_id' => 2,
+            // ]);
+
+            // $user->username = 'manager56'; //variabel $user mengalami perubahan
+
+            // //isDirty() digunakan untuk mengecek apakah model telah diubah sebelum disimpan.
+            // //isClean() digunakan untuk mengecek apakah model masih sama seperti di database (belum diubah).
+
+
+            // $user->isDirty(); // true
+            // $user->isDirty('username'); // true
+            // $user->isDirty('nama'); // false
+            // $user->isDirty(['nama', 'username']); // true
+
+            // $user->isClean(); // false
+            // $user->isClean('username'); // false
+            // $user->isClean('nama'); // true
+            // $user->isClean(['nama', 'username']); // false
+
+            // $user->save(); // data sudah disimpan ke database, sehingga variabel $user diangap bersih atau tidak ada perubahan
+
+            // $user->isDirty(); // false
+            // $user->isClean(); // true
+            // dd($user->isDirty());
+
+
             $user = UserModel::create([
-                'username' => 'manager55',
-                'nama' => 'Manager55',
+                'username' => 'manager11',
+                'nama' => 'Manager11',
                 'password' => Hash::make('12345'),
                 'level_id' => 2,
             ]);
 
-            $user->username = 'manager56'; //variabel $user mengalami perubahan
+            $user->username = 'manager12';
 
-            //isDirty() digunakan untuk mengecek apakah model telah diubah sebelum disimpan.
-            //isClean() digunakan untuk mengecek apakah model masih sama seperti di database (belum diubah).
+            $user->save();
+
             //wasChanged() digunakan untuk mengecek apakah perubahan benar-benar disimpan ke database setelah save().
 
-
-            $user->isDirty(); // true
-            $user->isDirty('username'); // true
-            $user->isDirty('nama'); // false
-            $user->isDirty(['nama', 'username']); // true
-
-            $user->isClean(); // false
-            $user->isClean('username'); // false
-            $user->isClean('nama'); // true
-            $user->isClean(['nama', 'username']); // false
-
-            $user->save(); // data sudah disimpan ke database, sehingga variabel $user diangap bersih atau tidak ada perubahan
-
-            $user->isDirty(); // false
-            $user->isClean(); // true
-            dd($user->isDirty());
+            $user->wasChanged(); // true
+            $user->wasChanged('username'); // true
+            $user->wasChanged(['username', 'level_id']); // true
+            $user->wasChanged('nama'); // false
+            dd($user->wasChanged(['nama', 'username'])); // true
 
             return view('user', ['data' => $user]);
     }
