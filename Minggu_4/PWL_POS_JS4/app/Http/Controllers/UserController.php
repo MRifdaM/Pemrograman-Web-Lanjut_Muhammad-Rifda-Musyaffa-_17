@@ -176,7 +176,12 @@ class UserController extends Controller
             // dd($user->wasChanged(['nama', 'username'])); // true
 
             //---------------------------------------------------------Praktikum 2.6--------------------------------------------------
-            $user = UserModel::all();
+            // $user = UserModel::all();
+            // return view('user', ['data' => $user]);
+
+            //---------------------------------------------------------Praktikum 2.7--------------------------------------------------
+            $user = UserModel::with('level')->get();
+            // dd($user);
             return view('user', ['data' => $user]);
     }
 
@@ -217,7 +222,7 @@ class UserController extends Controller
 
     public function hapus($id)
     {
-        $user = UserModel::find($id);
+        $user = UserModel::find($id); //Mengambil semua data dari tabel m_user, sekaligus mengambil data dari tabel m_level berdasarkan relasi level().
         $user->delete();
 
         return redirect('/user');
