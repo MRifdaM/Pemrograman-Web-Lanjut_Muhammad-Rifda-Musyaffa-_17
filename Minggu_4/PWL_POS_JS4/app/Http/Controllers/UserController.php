@@ -89,7 +89,7 @@ class UserController extends Controller
             //Catatan: dd($user); (die and dump) bukan sekadar echo, tetapi metode Laravel untuk debugging. Selain menampilkan nilai variabel, dd() juga menampilkan lokasi kode yang memanggilnya.
             // dd($user); //Menampilkan hasilnya dengan dd()
 
-             //---------------------------------------------------Praktikum 2.4-------------------------------------------------------
+            //---------------------------------------------------Praktikum 2.4-------------------------------------------------------
             //Mencari satu data pertama yang cocok berdasarkan kondisi
             //Jika data ditemukan, Laravel mengembalikan data yang ada, Jika tidak ditemukan, Laravel akan menyimpan data baru ke database, lalu mengembalikan data tersebut.
             // $user = UserModel::firstOrCreate(
@@ -108,23 +108,54 @@ class UserController extends Controller
             //     ]
             // );
 
-            // $user = UserModel::firstOrNew(//Digunakan untuk mencari data pertama berdasarkan kondisi yang diberikan. Jika data ditemukan, Laravel mengembalikan object model yang sudah ada.
-            //                               //Namun, jika data tidak ditemukan, Laravel akan membuat object model baru tetapi tidak langsung menyimpannya ke database. harus memanggil $model->save(); secara manual jika ingin menyimpannya.
+            // $user = UserModel::firstOrNew( //Digunakan untuk mencari data pertama berdasarkan kondisi yang diberikan. Jika data ditemukan, Laravel mengembalikan object model yang sudah ada.
+            //                                //Namun, jika data tidak ditemukan, Laravel akan membuat object model baru tetapi tidak langsung menyimpannya ke database. harus memanggil $model->save(); secara manual jika ingin menyimpannya.
             //     [
             //         'username' => 'manager',
             //         'nama' => 'Manager'
             //     ]
             // );
 
-            $user = UserModel::firstOrNew(
-                [
-                    'username' => 'manager33',
-                    'nama' => 'Manager Tiga Tiga',
-                    'password' => Hash::make('12345'),
-                    'level_id' => 2
-                ]
-            );
-            $user->save(); //Menyimpan data ke database
+            // $user = UserModel::firstOrNew(
+            //     [
+            //         'username' => 'manager33',
+            //         'nama' => 'Manager Tiga Tiga',
+            //         'password' => Hash::make('12345'),
+            //         'level_id' => 2
+            //     ]
+            // );
+            // $user->save(); //Menyimpan data ke database
+            //---------------------------------------------------Praktikum 2.5-------------------------------------------------------
+            $user = UserModel::create([
+                'username' => 'manager55',
+                'nama' => 'Manager55',
+                'password' => Hash::make('12345'),
+                'level_id' => 2,
+            ]);
+
+            $user->username = 'manager56'; //variabel $user mengalami perubahan
+
+            //isDirty() digunakan untuk mengecek apakah model telah diubah sebelum disimpan.
+            //isClean() digunakan untuk mengecek apakah model masih sama seperti di database (belum diubah).
+            //wasChanged() digunakan untuk mengecek apakah perubahan benar-benar disimpan ke database setelah save().
+
+
+            $user->isDirty(); // true
+            $user->isDirty('username'); // true
+            $user->isDirty('nama'); // false
+            $user->isDirty(['nama', 'username']); // true
+
+            $user->isClean(); // false
+            $user->isClean('username'); // false
+            $user->isClean('nama'); // true
+            $user->isClean(['nama', 'username']); // false
+
+            $user->save(); // data sudah disimpan ke database, sehingga variabel $user diangap bersih atau tidak ada perubahan
+
+            $user->isDirty(); // false
+            $user->isClean(); // true
+            dd($user->isDirty());
+
             return view('user', ['data' => $user]);
     }
 }
