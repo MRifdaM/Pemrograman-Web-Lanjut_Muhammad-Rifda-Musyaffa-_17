@@ -6,51 +6,63 @@
 <body>
     <h1>Data User</h1>
     <table border="1" cellpadding="2" cellspacing="0">
-        <tr>
             {{-- --------------------------------Jobsheet 3------------------------------------ --}}
+            {{-- <tr> --}}
             {{-- <th>ID</th>
             <th>Username</th>
             <th>Nama</th>
             <th>ID Level Pengguna</th> --}}
 
-            {{-- --------------------------------Jobsheet 4----------------------------------- --}}
+            {{-- Menampilkan array asoc dengan lebih dari 1 data  --}}
+            {{-- @foreach ($data as $d)
+            <tr>
+                <td>{{ $d->user_id }}</td>
+                <td>{{ $d->username }}</td>
+                <td>{{ $d->nama }}</td>
+                <td>{{ $d->level_id }}</td>
+            </tr>
+            @endforeach --}}
+            {{-- </tr> --}}
+
+            {{-- --------------------------------Jobsheet 4---------------------------------------------- --}}
+
+            {{-- ---------------------------------Praktikum 2.1-------------------------------------------- --}}
+            {{-- <tr> --}}
+                {{-- <th>ID</th>
+                <th>Username</th>
+                <th>Nama</th>
+                <th>ID Level Pengguna</th> --}}
+            {{-- </tr> --}}
+            {{-- <tr> --}}
+                {{-- Menampilkan array asoc dengan 1 data  --}}
+                {{-- <td>{{ $data->user_id }}</td>
+                    <td>{{ $data->username }}</td>
+                    <td>{{ $data->nama }}</td>
+                    <td>{{ $data->level_id }}</td> --}}
+            {{-- </tr> --}}
+
             {{-- -------------------------------Praktikum 2.3-------------------------------------- --}}
-            {{-- <th>Jumlah Pengguna</th> --}}
+            {{-- <tr> --}}
+                {{-- <th>Jumlah Pengguna</th> --}}
+            {{-- </tr> --}}
+            {{-- <tr> --}}
+                {{-- <td>{{ $data }}</td> --}}
+            {{-- </tr> --}}
+
 
             {{-- -------------------------------Praktikum 2.4-------------------------------------- --}}
-            <th>ID</th>
-            <th>Username</th>
-            <th>Nama</th>
-            <th>ID Level Pengguna</th>
-
-        </tr>
-        {{-- -----------------------------------Jobsheet 3-------------------------------------------- --}}
-        {{-- Menampilkan array asoc dengan lebih dari 1 data  --}}
-        {{-- @foreach ($data as $d)
-        <tr>
-            <td>{{ $d->user_id }}</td>
-            <td>{{ $d->username }}</td>
-            <td>{{ $d->nama }}</td>
-            <td>{{ $d->level_id }}</td>
-        </tr>
-        @endforeach --}}
-
-        {{-- -----------------------------------Jobsheet 4-------------------------------------------- --}}
-        {{-- ---------------------------------Praktikum 2.1-------------------------------------------- --}}
-        {{-- Menampilkan array asoc dengan 1 data  --}}
-        {{-- <td>{{ $data->user_id }}</td>
-        <td>{{ $data->username }}</td>
-        <td>{{ $data->nama }}</td>
-        <td>{{ $data->level_id }}</td> --}}
-
-        {{-- --------------------------------Praktikum 2.3------------------------------------------ --}}
-        {{-- <td>{{ $data }}</td> --}}
-
-        {{-- -------------------------------Praktikum 2.4-------------------------------------- --}}
-        <td>{{ $data->user_id }}</td>
-        <td>{{ $data->username }}</td>
-        <td>{{ $data->nama }}</td>
-        <td>{{ $data->level_id }}</td>
+            {{-- <tr> --}}
+                {{-- <th>ID</th>
+                <th>Username</th>
+                <th>Nama</th>
+                <th>ID Level Pengguna</th> --}}
+            {{-- </tr> --}}
+            {{-- <tr> --}}
+                {{-- <td>{{ $data->user_id }}</td>
+                    <td>{{ $data->username }}</td>
+                    <td>{{ $data->nama }}</td>
+                    <td>{{ $data->level_id }}</td> --}}
+            {{-- </tr> --}}
     </table>
 </body>
 </html>
