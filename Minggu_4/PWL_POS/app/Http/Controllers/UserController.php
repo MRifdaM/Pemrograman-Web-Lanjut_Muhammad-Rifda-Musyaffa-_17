@@ -70,9 +70,13 @@ class UserController extends Controller
             //     abort(404); //Jika data tidak ditemukan, maka akan menampilkan error 404
             // });
 
-            $user = UserModel::findOr(20, ['username', 'nama'], function () {
-                abort(404);
-            });
+            // $user = UserModel::findOr(20, ['username', 'nama'], function () {
+            //     abort(404);
+            // });
+
+            //---------------------------------------------------Praktikum 2.2-------------------------------------------------------
+
+            $user = UserModel::findOrFail(1); //Mencari data pengguna dengan primary key ID = 1 di dalam database, jika data tidak ditemukan maka akan menampilkan error 404 tanpa perlu menulis abort(404).
             return view('user', ['data' => $user]);
     }
 }
