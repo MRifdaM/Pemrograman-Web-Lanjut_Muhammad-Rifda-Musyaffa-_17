@@ -83,9 +83,19 @@ class UserController extends Controller
 
             //---------------------------------------------------Praktikum 2.3-------------------------------------------------------
 
-            $user = UserModel::where('level_id',2)->count(); //Menghitung jumlah data dalam tabel users yang memiliki level_id = 2
+            // $user = UserModel::where('level_id',2)->count(); //Menghitung jumlah data dalam tabel users yang memiliki level_id = 2
             //Catatan: dd($user); (die and dump) bukan sekadar echo, tetapi metode Laravel untuk debugging. Selain menampilkan nilai variabel, dd() juga menampilkan lokasi kode yang memanggilnya.
             // dd($user); //Menampilkan hasilnya dengan dd()
+
+             //---------------------------------------------------Praktikum 2.4-------------------------------------------------------
+            //Mencari satu data pertama yang cocok berdasarkan kondisi
+            //Jika data ditemukan, Laravel mengembalikan data yang ada, Jika tidak ditemukan, Laravel akan menyimpan data baru ke database, lalu mengembalikan data tersebut.
+            $user = UserModel::firstOrCreate(
+                [
+                    'username' => 'manager',
+                    'nama' => 'Manager'
+                ]
+            );
             return view('user', ['data' => $user]);
     }
 }
