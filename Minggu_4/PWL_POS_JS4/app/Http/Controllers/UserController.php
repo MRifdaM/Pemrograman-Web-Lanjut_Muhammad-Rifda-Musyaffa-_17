@@ -7,6 +7,8 @@ use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+use function Laravel\Prompts\password;
+
 class UserController extends Controller
 {
     public function index(){
@@ -90,10 +92,19 @@ class UserController extends Controller
              //---------------------------------------------------Praktikum 2.4-------------------------------------------------------
             //Mencari satu data pertama yang cocok berdasarkan kondisi
             //Jika data ditemukan, Laravel mengembalikan data yang ada, Jika tidak ditemukan, Laravel akan menyimpan data baru ke database, lalu mengembalikan data tersebut.
-            $user = UserModel::firstOrCreate(
+            // $user = UserModel::firstOrCreate(
+            //     [
+            //         'username' => 'manager',
+            //         'nama' => 'Manager'
+            //     ]
+            // );
+
+            $user = UserModel::firstOrCreate(//Akan melakukan insert data, karena data pada kode ini belum ada di database
                 [
-                    'username' => 'manager',
-                    'nama' => 'Manager'
+                    'username' => 'manager22',
+                    'nama' => 'Manager Dua Dua',
+                    'password' => Hash::make('12345'),
+                    'level_id' => 2
                 ]
             );
             return view('user', ['data' => $user]);

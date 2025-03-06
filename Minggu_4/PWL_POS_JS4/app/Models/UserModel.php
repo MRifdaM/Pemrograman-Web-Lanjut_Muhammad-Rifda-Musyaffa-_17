@@ -20,5 +20,5 @@ class UserModel extends Model
     // protected $fillable = ['level_id', 'username', 'nama', 'password'];
 
     //Menghilangkan kolom password pada variabel $fillable, menandakan variabel password tidak bisa diisi ketika melakukan insert atau update ke database.
-    protected $fillable = ['level_id', 'username', 'nama'];
+    protected $fillable = ['level_id', 'username', 'nama', 'password'];
 }
