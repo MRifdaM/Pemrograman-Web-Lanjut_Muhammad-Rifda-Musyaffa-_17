@@ -19,7 +19,7 @@ return new class extends Migration
             $table->datetime('tanggal_penjualan');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('user_id')->on('m_user')->onDelete('cascade');
+            $table->foreign('user_id')->references('user_id')->on('m_user');
         });
     }
 
