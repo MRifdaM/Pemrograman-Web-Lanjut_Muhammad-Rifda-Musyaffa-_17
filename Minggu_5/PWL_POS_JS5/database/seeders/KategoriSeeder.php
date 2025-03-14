@@ -25,9 +25,16 @@ class KategoriSeeder extends Seeder
                 'deskripsi'   => 'Kategori pakaian dan aksesoris',
             ],
             [
-                'kode_kategori' => 'KTG03',
-                'nama_kategori' => 'Makanan',
-                'deskripsi'   => 'Kategori makanan dan minuman',
+                'kode_kategori' => 'CML',
+                'nama_kategori' => 'Cemilan',
+                'deskripsi'   => 'Kategori makanan ringan',
+                'created_at' => now()
+            ],
+            [
+                'kode_kategori' => 'MNR',
+                'nama_kategori' => 'Minuman Ringan',
+                'deskripsi'   => 'Kategori minuman ringan',
+                'created_at' => now()
             ],
             [
                 'kode_kategori' => 'KTG04',

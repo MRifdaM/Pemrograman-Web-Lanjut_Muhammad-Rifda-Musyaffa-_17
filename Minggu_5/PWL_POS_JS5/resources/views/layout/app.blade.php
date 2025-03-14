@@ -42,15 +42,27 @@
 
 {{-- Add common Javascript/Jquery code --}}
 @push('js')
-<script>
+{{-- -----------------------------------------------------JS 4---------------------------------------------------- --}}
+{{-- ------------------------------------Praktikum 1------------------------------------ --}}
+{{-- <script>
     $(document).ready(function() {
         // Add your common script logic here...
     });
-</script>
+</script> --}}
+
+{{-- ------------------------------------Praktikum 2------------------------------------- --}}
+<script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
 @endpush
+
+{{-- ------------------------------JS 4 - Praktikum 2------------------------ --}}
+@stack('scripts')
+
 
 {{-- Add common CSS customizations --}}
 @push('css')
+{{-- ----------------------------------JS 4 - Praktikum 2--------------------- --}}
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.css" />
+
 <style type="text/css">
 
     {{-- You can add AdminLTE customizations here --}}
