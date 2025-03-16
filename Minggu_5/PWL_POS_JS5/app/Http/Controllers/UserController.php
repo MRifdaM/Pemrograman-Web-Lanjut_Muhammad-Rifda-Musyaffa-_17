@@ -194,7 +194,7 @@ class UserController extends Controller
         UserModel::create([
             'username' => $request->username,
             'nama' => $request->nama,
-            'password' => Hash::make('$request->password'),
+            'password' => Hash::make($request->password),
             'level_id' => $request->level_id
         ]);
 
@@ -212,7 +212,7 @@ class UserController extends Controller
 
         $user->username = $request->username;
         $user->nama = $request->nama;
-        $user->password = Hash::make('$request->password');
+        $user->password = Hash::make($request->password);
         $user->level_id = $request->level_id;
 
         $user->save();
