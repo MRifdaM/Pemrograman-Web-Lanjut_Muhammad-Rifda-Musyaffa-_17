@@ -6,6 +6,8 @@
     @hasSection('subtitle') | @yield('subtitle') @endif
 @stop
 
+@vite('resources/js/app.js')
+
 {{-- Extend and customize the page content header --}}
 @section('content_header')
     @hasSection('content_header_title')
