@@ -306,6 +306,18 @@ return [
             'topnav_right' => true,
         ],
         [
+            'text'    => 'Kategori',
+            'icon'    => 'fas fa-tags',
+            'topnav_right'  => true,
+            'submenu' => [
+                [
+                    'text' => 'Manage Kategori',
+                    'url'  => '/kategori',
+                    'icon' => 'fas fa-list-ul',
+                ],
+            ],
+        ],
+        [
             'type' => 'fullscreen-widget',
             'topnav_right' => true,
         ],
