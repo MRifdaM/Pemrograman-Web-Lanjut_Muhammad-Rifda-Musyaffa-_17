@@ -13,7 +13,7 @@ class KategoriModel extends Model
     protected $table = 'm_kategori';
     protected $primaryKey = 'kategori_id';
 
-    protected $fillable = ['kode_kategori', 'nama_kategori', 'created_at', 'updated_at'];
+    protected $fillable = ['kode_kategori', 'nama_kategori', 'deskripsi','created_at', 'updated_at'];
 
     public function barang(): HasMany
     {
