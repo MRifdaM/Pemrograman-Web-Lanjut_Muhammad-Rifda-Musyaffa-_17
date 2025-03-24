@@ -448,7 +448,7 @@ class UserController extends Controller
                 ]);
             }
         }
-        return redirect('/user');
+        return redirect('/');
     }
 
     // public function tambah(){
