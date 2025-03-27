@@ -246,11 +246,20 @@ class SupplierController extends Controller
                 ]);
             }
 
-            SupplierModel::find($id)->update($request->all());
+            $supplier = SupplierModel::find($id);
+
+            if ($supplier) {
+                $supplier->update($request->all());
+
+                return response()->json([
+                    'status'  => true,
+                    'message' => 'Data supplier berhasil diupdate.',
+                ]);
+            }
 
             return response()->json([
-                'status' => true,
-                'message' => 'Data supplier berhasil diubah'
+                'status'  => false,
+                'message' => 'Data tidak ditemukan.',
             ]);
         }
 

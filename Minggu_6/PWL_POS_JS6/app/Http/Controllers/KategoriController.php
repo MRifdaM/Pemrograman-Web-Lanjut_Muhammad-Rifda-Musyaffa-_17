@@ -242,11 +242,20 @@ class KategoriController extends Controller
                 ]);
             }
 
-            KategoriModel::find($id)->update($request->all());
+            $kategori = KategoriModel::find($id);
+
+            if ($kategori) {
+                $kategori->update($request->all());
+
+                return response()->json([
+                    'status'  => true,
+                    'message' => 'Data kategori berhasil diupdate.',
+                ]);
+            }
 
             return response()->json([
-                'status' => true,
-                'message' => 'Data kategori berhasil diubah'
+                'status'  => false,
+                'message' => 'Data tidak ditemukan.',
             ]);
         }
 
