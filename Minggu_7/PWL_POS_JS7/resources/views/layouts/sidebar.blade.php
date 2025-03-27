@@ -67,12 +67,24 @@
                     <p>Transaksi Penjualan</p>
                 </a>
             </li>
+            <li class="nav-header">Data Supplier</li>
             <li class="nav-item">
                 <a href="{{ url('/supplier') }}" class="nav-link {{ ($activeMenu ==
                 'supplier') ? 'active' : '' }} ">
                     <i class="nav-icon fas fa-truck"></i>
                     <p>Supplier</p>
                 </a>
+            </li>
+            <li class="nav-header">Keluar</li>
+            <li class="nav-item">
+                <a href="#" class="nav-link"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="nav-icon fas fa-sign-out-alt"></i>
+                    <p>Logout</p>
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
             </li>
         </ul>
     </nav>
