@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable; // implementasi class Authenticatable
 
-class UserModel extends Model
+class UserModel extends Authenticatable
 {
     use HasFactory;
 
@@ -23,6 +24,11 @@ class UserModel extends Model
 
     //Menghilangkan kolom password pada variabel $fillable, menandakan variabel password tidak bisa diisi ketika melakukan insert atau update ke database.
     // protected $fillable = ['level_id', 'username', 'nama'];
+
+    //================================================================Jobsheet 7============================================================
+    protected $hidden = ['password']; // jangan di tampilkan saat select
+
+    protected $casts = ['password' => 'hashed']; // casting password agar otomatis di hash
 
     public function level(): BelongsTo //Menunjukkan bahwa setiap user memiliki relasi belongsTo dengan tabel LevelModel, dihubungkan melalui level_id.
     {
