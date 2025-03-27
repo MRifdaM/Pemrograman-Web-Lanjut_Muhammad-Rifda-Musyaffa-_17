@@ -90,7 +90,6 @@
                                 title: 'Terjadi Kesalahan',
                                 text: response.message
                             });
-                            event.preventDefault();
                         }
                     }
                 });
