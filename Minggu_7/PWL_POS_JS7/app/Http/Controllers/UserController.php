@@ -387,14 +387,14 @@ class UserController extends Controller
                 ]);
             }
 
-            // UserModel::create($request->all());
+            UserModel::create($request->all());
+            
+            // // Menambahkan perbaikan kode untuk melakukan hash password terlebih dahulu sebelum disimpan ke database
+            // $data = $request->all();
 
-            // Menambahkan perbaikan kode untuk melakukan hash password terlebih dahulu sebelum disimpan ke database
-            $data = $request->all();
+            // $data['password'] = Hash::make($request->password);
 
-            $data['password'] = Hash::make($request->password);
-
-            UserModel::create($data);
+            // UserModel::create($data);
 
             return response()->json([
                 'status' => true,
