@@ -9,17 +9,8 @@
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
-    <style>
-    /* Aturan custom tambahan untuk pesan error */
-    label.error {
-        color: red;
-        font-size: 0.9em;
-        margin-top: 5px;
-        display: block;
-    }
-    </style>
-    </head>
-    <body class="hold-transition register-page">
+</head>
+<body class="hold-transition register-page">
     <div class="register-box">
     <div class="card card-outline card-primary">
     <div class="card-header text-center">
@@ -28,10 +19,9 @@
     <div class="card-body">
         <p class="login-box-msg">Register akun baru</p>
 
-        <form id="registerForm">
+        <form action="{{ route('register') }}" method="POST" id="registerForm">
         @csrf
 
-        <!-- Pilihan Level -->
         <div class="input-group mb-3">
             <select name="level_id" class="form-control" required>
             <option value="">-- Pilih Level --</option>
@@ -46,6 +36,7 @@
             </div>
         </div>
 
+        <!-- Username -->
         <div class="input-group mb-3">
             <input type="text" name="username" class="form-control" placeholder="Username" required minlength="3">
             <div class="input-group-append">
@@ -55,6 +46,7 @@
             </div>
         </div>
 
+        <!-- Nama Lengkap -->
         <div class="input-group mb-3">
             <input type="text" name="nama" class="form-control" placeholder="Nama Lengkap" required maxlength="100">
             <div class="input-group-append">
@@ -64,6 +56,7 @@
             </div>
         </div>
 
+        <!-- Password -->
         <div class="input-group mb-3">
             <input type="password" name="password" class="form-control" placeholder="Password" required minlength="6">
             <div class="input-group-append">
@@ -73,6 +66,7 @@
             </div>
         </div>
 
+        <!-- Konfirmasi Password -->
         <div class="input-group mb-3">
             <input type="password" name="password_confirmation" class="form-control" placeholder="Konfirmasi Password" required minlength="6">
             <div class="input-group-append">
@@ -82,6 +76,7 @@
             </div>
         </div>
 
+        <!-- Checkbox Terms -->
         <div class="row">
             <div class="col-8">
             <div class="icheck-primary">
@@ -91,6 +86,7 @@
                 </label>
             </div>
             </div>
+            <!-- Tombol Submit -->
             <div class="col-4">
             <button type="submit" class="btn btn-primary btn-block">Daftar</button>
             </div>
@@ -114,7 +110,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-    // Inisialisasi validasi dengan jQuery Validation Plugin
+    $(document).ready(function() {
     $("#registerForm").validate({
         rules: {
             level_id: { required: true },
@@ -145,8 +141,9 @@
             terms: "Anda harus menyetujui syarat & ketentuan"
         },
         errorPlacement: function(error, element) {
+            // Menggunakan kelas bawaan Bootstrap untuk pesan error
             error.addClass('invalid-feedback d-block');
-            if(element.attr("name") == "terms") {
+            if (element.attr("name") == "terms") {
                 error.insertAfter(element.closest('.icheck-primary'));
             } else {
                 error.insertAfter(element.closest('.input-group'));
@@ -159,42 +156,40 @@
             $(element).removeClass('is-invalid');
         },
         submitHandler: function(form) {
-            let formData = new FormData(form);
-            fetch("{{ route('register') }}", {
-                method: "POST",
-                body: formData,
-                headers: {
-                    "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil',
-                        text: data.message,
-                        timer: 5000,
-                        showConfirmButton: false
-                    }).then(() => {
-                        window.location.href = data.redirect;
-                    });
-                } else {
+            // Kirim data melalui Ajax menggunakan $.ajax (sama seperti fitur login)
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: $(form).serialize(),
+                success: function(response) {
+                    if(response.status) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Registrasi Berhasil',
+                            text: response.message,
+                            showConfirmButton: true
+                        }).then(function() {
+                            window.location.href = response.redirect;
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Registrasi Gagal',
+                            text: "Terjadi kesalahan. Pastikan username belum dipakai dan data yang Anda masukkan valid."
+                        });
+                    }
+                },
+                error: function() {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Registrasi Gagal',
-                        text: "Terjadi kesalahan. Pastikan username belum dipakai dan data yang Anda masukkan valid."
+                        title: 'Terjadi Kesalahan',
+                        text: "Terjadi kesalahan pada sistem. Silakan coba lagi."
                     });
                 }
-            })
-            .catch(error => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Terjadi Kesalahan',
-                    text: "Terjadi kesalahan pada sistem. Silakan coba lagi."
-                });
             });
+            return false;
         }
+    });
     });
 </script>
 </body>
