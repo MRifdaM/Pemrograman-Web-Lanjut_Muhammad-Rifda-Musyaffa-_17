@@ -176,6 +176,8 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
             Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax']);
             Route::get('/{id}/show_ajax', [LevelController::class, 'show_ajax']);
             Route::delete('/{id}', [LevelController::class, 'destroy']);
+            Route::get('/import', [LevelController::class, 'import']);
+            Route::post('/import_ajax', [LevelController::class, 'import_ajax']);
         });
     });
 
@@ -219,6 +221,8 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
             Route::delete('/{id}/delete_ajax', [UserController::class, 'delete_ajax']); // Untuk hapus data user Ajax
             Route::get('/{id}/show_ajax', [UserController::class, 'show_ajax']); // untuk menampilkan detail
             Route::delete('/{id}', [UserController::class, 'destroy']);  // menghapus data user
+            Route::get('/import', [UserController::class, 'import']);
+            Route::post('/import_ajax', [UserController::class, 'import_ajax']);
         });
     });
 
@@ -239,6 +243,8 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
             Route::delete('/{id}/delete_ajax', [SupplierController::class, 'delete_ajax']);
             Route::get('/{id}/show_ajax', [SupplierController::class, 'show_ajax']);
             Route::delete('/{id}', [SupplierController::class, 'destroy']);
+            Route::get('/import', [SupplierController::class, 'import']);
+            Route::post('/import_ajax', [SupplierController::class, 'import_ajax']);
         });
     });
 
@@ -259,6 +265,8 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
             Route::delete('/{id}/delete_ajax', [KategoriController::class, 'delete_ajax']);
             Route::get('/{id}/show_ajax', [KategoriController::class, 'show_ajax']);
             Route::delete('/{id}', [KategoriController::class, 'destroy']);
+            Route::get('/import', [KategoriController::class, 'import']);
+            Route::post('/import_ajax', [KategoriController::class, 'import_ajax']);
         });
     });
 
