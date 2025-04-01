@@ -49,12 +49,11 @@ class LevelController extends Controller
 
         ->addIndexColumn() // menambahkan kolom index / no urut (default nama kolom:DT_RowIndex)
         ->addColumn('aksi', function ($level) { // menambahkan kolom aksi
-            /* $btn = '<a href="'.url('/user/' . $user->user_id).'" class="btn btn-info btnsm">Detail</a> ';
-            $btn .= '<a href="'.url('/user/' . $user->user_id . '/edit').'" class="btn btnwarning btn-sm">Edit</a> ';
-            $btn .= '<form class="d-inline-block" method="POST" action="'. url('/user/'.$user-
-            >user_id).'">'
-            . csrf_field() . method_field('DELETE') .
-            '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakit menghapus data ini?\');">Hapus</button></form>';*/
+            // $btn = '<a href="'.url('/level/' . $levels->level_id).'" class="btn btn-info btnsm">Detail</a> ';
+            // $btn .= '<a href="'.url('/level/' . $level->level_id . '/edit').'" class="btn btn-warning btn-sm">Edit</a> ';
+            // $btn .= '<form class="d-inline-block" method="POST" action="'.url('/level/'.$level->level_id).'">'
+            //     . csrf_field() . method_field('DELETE') .
+            //     '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakit menghapus data ini?\');">Hapus</button></form>';
             $btn = '<button onclick="modalAction(\'' . url('/level/' . $level->level_id .
                 '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
             $btn .= '<button onclick="modalAction(\'' . url('/level/' . $level->level_id .
