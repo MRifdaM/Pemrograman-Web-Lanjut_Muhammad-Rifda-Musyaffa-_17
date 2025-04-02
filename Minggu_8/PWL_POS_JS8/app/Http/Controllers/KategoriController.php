@@ -367,4 +367,58 @@ class KategoriController extends Controller
 
         return redirect('/');
     }
+
+    public function export_excel()
+    {
+        //Ambil value kategori yang akan diexport
+        $kategori = KategoriModel::select(
+            'kode_kategori',
+            'nama_kategori',
+            'deskripsi'
+        )
+        ->orderBy('kategori_id')
+        ->get();
+
+        //load library excel
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet(); //ambil sheet aktif
+
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Kode Kategori');
+        $sheet->setCellValue('C1', 'Nama Kategori');
+        $sheet->setCellValue('D1', 'Deskripsi Kategori');
+
+        $sheet->getStyle('A1:D1')->getFont()->setBold(true); // Set header bold
+
+        $no = 1; //Nomor value dimulai dari 1
+        $baris = 2; //Baris value dimulai dari 2
+        foreach ($kategori as $key => $value) {
+            $sheet->setCellValue('A' . $baris, $no);
+            $sheet->setCellValue('B' . $baris, $value->kode_kategori);
+            $sheet->setCellValue('C' . $baris, $value->nama_kategori);
+            $sheet->setCellValue('D' . $baris, $value->deskripsi);
+            $no++;
+            $baris++;
+        }
+
+        foreach (range('A', 'D') as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true); //set auto size untuk kolom
+        }
+
+        $sheet->setTitle('Data kategori'); //set judul sheet
+        $writer = IOFactory ::createWriter($spreadsheet, 'Xlsx'); //set writer
+        $filename = 'Data_kategori_' . date('Y-m-d_H-i-s') . '.xlsx'; //set nama file
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+
+        $writer->save('php://output'); //simpan file ke output
+        exit; //keluar dari scriptA
+    }
 }
