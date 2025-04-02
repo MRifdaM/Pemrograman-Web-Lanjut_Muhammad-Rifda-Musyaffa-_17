@@ -287,6 +287,8 @@ Route::middleware(['auth'])->group(function () { // artinya semua route di dalam
             Route::delete('/{id}/delete_ajax', [StokController::class, 'delete_ajax']);
             Route::get('/{id}/show_ajax', [StokController::class, 'show_ajax']);
             Route::delete('/{id}', [StokController::class, 'destroy']);
+            Route::get('/import', [StokController::class, 'import']);
+            Route::post('/import_ajax', [StokController::class, 'import_ajax']);
         });
     });
 
