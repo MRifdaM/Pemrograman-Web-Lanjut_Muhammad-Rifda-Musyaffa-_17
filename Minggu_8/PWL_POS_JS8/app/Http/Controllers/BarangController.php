@@ -25,10 +25,10 @@ class BarangController extends Controller
 
         $activeMenu = 'barang'; // menu aktif
 
-        // Ambil semua data kategori untuk dropdown filter
+        // Ambil semua value kategori untuk dropdown filter
         // $kategori = KategoriModel::all();
 
-        // Mengambil semua data kategori untuk filed kategeri_id dan kategori_nama
+        // Mengambil semua value kategori untuk filed kategeri_id dan kategori_nama
         $kategori = KategoriModel::select('kategori_id', 'nama_kategori')->get();
 
         return view('barang.index', [
@@ -39,7 +39,7 @@ class BarangController extends Controller
         ]);
     }
 
-    // Mengambil data barang dalam bentuk JSON (untuk DataTables)
+    // Mengambil value barang dalam bentuk JSON (untuk DataTables)
     public function list(Request $request)
     {
         // Select kolom yang ditampilkan di tabel list
@@ -53,7 +53,7 @@ class BarangController extends Controller
         )
         ->with('kategori'); // relasi ke tabel kategori
 
-        // Filter data berdasarkan kategori_id
+        // Filter value berdasarkan kategori_id
         // if ($request->filter_kategori) {
         //     $barang->where('kategori_id', $request->filter_kategori);
         // }
@@ -79,7 +79,7 @@ class BarangController extends Controller
             //             . csrf_field()
             //             . method_field('DELETE')
             //             . '<button type="submit" class="btn btn-danger btn-sm"
-            //                 onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">
+            //                 onclick="return confirm(\'Apakah Anda yakin menghapus value ini?\');">
             //                 Hapus
             //               </button></form>';
             $btn = '<button onclick="modalAction(\'' . url('/barang/' . $barang->barang_id .
@@ -106,7 +106,7 @@ class BarangController extends Controller
             'title' => 'Tambah barang baru'
         ];
 
-        // Ambil data kategori untuk select
+        // Ambil value kategori untuk select
         $kategori = KategoriModel::all();
         $activeMenu = 'barang';
 
@@ -118,7 +118,7 @@ class BarangController extends Controller
         ]);
     }
 
-    // Menyimpan data barang baru
+    // Menyimpan value barang baru
     public function store(Request $request)
     {
         $request->validate([
@@ -170,7 +170,7 @@ class BarangController extends Controller
     {
         $barang = BarangModel::find($id);
 
-        // Ambil data kategori untuk select
+        // Ambil value kategori untuk select
         $kategori = KategoriModel::all();
 
         $breadcrumb = (object) [
@@ -193,7 +193,7 @@ class BarangController extends Controller
         ]);
     }
 
-    // Menyimpan perubahan data barang
+    // Menyimpan perubahan value barang
     public function update(Request $request, string $id)
     {
         $request->validate([
@@ -220,7 +220,7 @@ class BarangController extends Controller
         return redirect('/barang')->with('success', 'Data barang berhasil diubah');
     }
 
-    // Menghapus data barang
+    // Menghapus value barang
     public function destroy(string $id)
     {
         $check = BarangModel::find($id);
@@ -235,7 +235,7 @@ class BarangController extends Controller
             // Jika ada constraint foreign key, dsb.
             return redirect('/barang')->with(
                 'error',
-                'Data barang gagal dihapus karena masih terdapat data lain yang terkait'
+                'Data barang gagal dihapus karena masih terdapat value lain yang terkait'
             );
         }
     }
@@ -356,7 +356,7 @@ class BarangController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'Data gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini'
+                'message' => 'Data gagal dihapus karena masih terdapat tabel lain yang terkait dengan value ini'
             ]);
         }
     }
@@ -392,21 +392,21 @@ class BarangController extends Controller
 
             // Membuat reader untuk file excel dengan format Xlsx
             $reader = IOFactory::createReader('Xlsx');
-            $reader->setReadDataOnly(true); // Hanya membaca data saja
+            $reader->setReadDataOnly(true); // Hanya membaca value saja
 
             // Load file excel
             $spreadsheet = $reader->load($file->getRealPath());
             $sheet = $spreadsheet->getActiveSheet(); // Ambil sheet yang aktif
 
-            // Ambil data excel sebagai array
-            $data = $sheet->toArray(null, false, true, true);
+            // Ambil value excel sebagai array
+            $value = $sheet->toArray(null, false, true, true);
             $insert = [];
             $errors = [];
 
-            // Pastikan data memiliki lebih dari 1 baris (header + data)
-            if (count($data) > 1) {
+            // Pastikan value memiliki lebih dari 1 baris (header + value)
+            if (count($value) > 1) {
                 // Pertama, validasi setiap baris kategori_id
-                foreach ($data as $baris => $value) {
+                foreach ($value as $baris => $value) {
                     if ($baris > 1) { // Baris pertama adalah header, jadi lewati
                         $kategoriId = $value['A'];
                         // Cek apakah kategori_id ada di tabel m_kategori
@@ -425,8 +425,8 @@ class BarangController extends Controller
                     ]);
                 }
 
-                // Jika semua kategori valid, buat array data untuk di-insert
-                foreach ($data as $baris => $value) {
+                // Jika semua kategori valid, buat array value untuk di-insert
+                foreach ($value as $baris => $value) {
                     if ($baris > 1) { // Lewati header
                         $insert[] = [
                             'kategori_id' => $value['A'],
@@ -440,7 +440,7 @@ class BarangController extends Controller
                 }
 
                 if (count($insert) > 0) {
-                    // Insert data ke database, jika data sudah ada, maka diabaikan
+                    // Insert value ke database, jika value sudah ada, maka diabaikan
                     BarangModel::insertOrIgnore($insert);
                 }
 
@@ -451,7 +451,7 @@ class BarangController extends Controller
             } else {
                 return response()->json([
                     'status'  => false,
-                    'message' => 'Tidak ada data yang diimport'
+                    'message' => 'Tidak ada value yang diimport'
                 ]);
             }
         }
@@ -459,4 +459,64 @@ class BarangController extends Controller
         return redirect('/');
     }
 
+    public function export_excel()
+    {
+        //Ambil value barang yang akan diexport
+        $barang = BarangModel::select(
+            'kategori_id',
+            'barang_kode',
+            'barang_nama',
+            'harga_jual',
+            'harga_beli'
+        )
+        ->orderBy('kategori_id')
+        ->with('kategori')
+        ->get();
+
+        //load library excel
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet(); //ambil sheet aktif
+
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Kode Barang');
+        $sheet->setCellValue('C1', 'Nama Barang');
+        $sheet->setCellValue('D1', 'Harga Jual');
+        $sheet->setCellValue('E1', 'Harga Beli');
+        $sheet->setCellValue('F1', 'Kategori');
+
+        $sheet->getStyle('A1:F1')->getFont()->setBold(true); // Set header bold
+
+        $no = 1; //Nomor value dimulai dari 1
+        $baris = 2; //Baris value dimulai dari 2
+        foreach ($barang as $key => $value) {
+            $sheet->setCellValue('A' . $baris, $no);
+            $sheet->setCellValue('B' . $baris, $value->barang_kode);
+            $sheet->setCellValue('C' . $baris, $value->barang_nama);
+            $sheet->setCellValue('D' . $baris, $value->harga_jual);
+            $sheet->setCellValue('E' . $baris, $value->harga_beli);
+            $sheet->setCellValue('F' . $baris, $value->kategori->nama_kategori); //ambil nama kategori
+            $no++;
+            $baris++;
+        }
+
+        foreach (range('A', 'F') as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true); //set auto size untuk kolom
+        }
+
+        $sheet->setTitle('Data Barang'); //set judul sheet
+        $writer = IOFactory ::createWriter($spreadsheet, 'Xlsx'); //set writer
+        $filename = 'Data_Barang_' . date('Y-m-d_H-i-s') . '.xlsx'; //set nama file
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+
+        $writer->save('php://output'); //simpan file ke output
+        exit; //keluar dari scriptA
+    }
 }
