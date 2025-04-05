@@ -4,6 +4,7 @@
     </IfModule>
 
     RewriteEngine On
+    RewriteBase /pemrograman-web-lanjut_muhammad-rifda-musyaffa-_17/Minggu_7/PWL_POS_JS7/public/
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
