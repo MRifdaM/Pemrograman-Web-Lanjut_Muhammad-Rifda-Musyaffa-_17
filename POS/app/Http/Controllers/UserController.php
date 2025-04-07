@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -41,10 +42,27 @@ class UserController extends Controller
         // $row = DB::table('m_user')->where('username', 'Customer1')->delete();
         // return 'Delete data berhasil, jumlah data yang dihapus: '.$row. ' baris';
 
-        $data = DB::table('m_user')->get();
-        return view('user', ['data' => $data]);
+        // $data = DB::table('m_user')->get();
+        // return view('user', ['data' => $data]);
 
+        //=======================================================================================Jobsheet 3 Praktikum 6===========================================================================================
+        // $data = [
+        //     'username' => 'customer-1',
+        //     'nama' => 'Pelanggan',
+        //     'password' => Hash::make('12345'), // class untuk mengenkripsi/hash password
+        //     'level_id' => 5
+        // ];
 
+        // UserModel::insert($data);
+
+        $data =[
+            'nama' => 'Pelanggan Pertama'
+        ];
+
+        UserModel::where('username', 'customer-1')->update($data);
+
+        $user = UserModel::all();
+        return view('user', ['data' => $user]);
     }
 
     // public function profile($id, $name)

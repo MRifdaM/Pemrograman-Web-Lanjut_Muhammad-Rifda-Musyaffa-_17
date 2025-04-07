@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SupplierModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -38,8 +39,27 @@ class SupplierController extends Controller
         // $row = DB::table('m_supplier')->where('supplier_kode', 'SPL104')->delete();
         // return 'Delete data berhasil, jumlah data yang dihapus: '.$row. ' baris';
 
-        $data = DB::table('m_supplier')->get();
-        return view('supplier', ['data' => $data]);
+        // $data = DB::table('m_supplier')->get();
+        // return view('supplier', ['data' => $data]);
+
+        //=======================================================================================Jobsheet 3 Praktikum 6===========================================================================================
+        // $data = [
+        //     'supplier_kode' => 'SPL104',
+        //     'supplier_nama' => 'PT Rahmat Jaya',
+        //     'supplier_alamat' => 'JL Agus Dibroho',
+        //     'created_at' => now()
+        // ];
+
+        // SupplierModel::insert($data);
+
+        $data =[
+            'supplier_nama' => 'PT Rahmat Kejayaan',
+        ];
+
+        SupplierModel::where('supplier_kode', 'SPL104')->update($data);
+
+        $supplier = SupplierModel::all();
+        return view('supplier', ['data' => $supplier]);
     }
 
 }

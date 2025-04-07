@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PenjualanModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -39,8 +40,27 @@ class PenjualanController extends Controller
         // $row = DB::table('t_penjualan')->where('penjualan_kode', 'PNJ11')->delete();
         // return 'Delete data berhasil, jumlah data yang dihapus: '.$row. ' baris';
 
-        $data = DB::table('t_penjualan')->get();
-        return view('penjualan', ['data' => $data]);
+        // $data = DB::table('t_penjualan')->get();
+        // return view('penjualan', ['data' => $data]);
 
+        //=======================================================================================Jobsheet 3 Praktikum 6===========================================================================================
+        // $data = [
+        //     'user_id' => '3',
+        //     'pembeli' => 'Seli Bunga',
+        //     'penjualan_kode' => 'PNJ11',
+        //     'tanggal_penjualan' => now(),
+        //     'created_at' => now()
+        // ];
+
+        // PenjualanModel::insert($data);
+
+        $data =[
+            'pembeli' => 'Selina Bunga',
+        ];
+
+        PenjualanModel::where('penjualan_kode', 'PNJ11')->update($data);
+
+        $penjualan = PenjualanModel::all();
+        return view('penjualan', ['data' => $penjualan]);
     }
 }

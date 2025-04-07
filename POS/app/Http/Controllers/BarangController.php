@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BarangModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -40,7 +41,28 @@ class BarangController extends Controller
         // $row = DB::table('m_barang')->where('barang_kode', 'ELT-003')->delete();
         // return 'Delete data berhasil, jumlah data yang dihapus: '.$row. ' baris';
 
-        $data = DB::table('m_barang')->get();
-        return view('barang', ['data' => $data]);
+        // $data = DB::table('m_barang')->get();
+        // return view('barang', ['data' => $data]);
+
+        //=======================================================================================Jobsheet 3 Praktikum 6===========================================================================================
+        // $data = [
+        //     'kategori_id' => '1',
+        //     'barang_kode' => 'ELT-003',
+        //     'barang_nama' => 'Kipas Angin Cosmos',
+        //     'harga_jual' => '120000',
+        //     'harga_beli' => '90000',
+        //     'created_at' => now()
+        // ];
+
+        // BarangModel::insert($data);
+
+        $data =[
+            'harga_jual' => '110000'
+        ];
+
+        BarangModel::where('barang_kode', 'ELT-003')->update($data);
+
+        $barang = BarangModel::all();
+        return view('barang', ['data' => $barang]);
     }
 }
