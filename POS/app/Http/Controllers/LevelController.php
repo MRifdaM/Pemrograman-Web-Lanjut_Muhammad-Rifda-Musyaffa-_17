@@ -19,7 +19,26 @@ class LevelController extends Controller
         // $row = DB::delete('delete from m_level where level_kode = ?', ['CUS']); // Menghapus data yang memiliki level kode CUS
         // return 'Delete data berhasil, jumlah data yang dihapus: '.$row. ' baris';
 
-        $data = DB::select('select * from m_level'); // Mengambil semua data dari tabel m_level
+        // $data = DB::select('select * from m_level'); // Mengambil semua data dari tabel m_level
+        // return view('level', ['data' => $data]);
+
+        //=======================================================================================Jobsheet 3 Praktikum 5=========================================================================================
+        // $data = [
+        //     'level_kode' => 'CUS',
+        //     'level_nama' => 'Customer',
+        //     'created_at' => now()
+        // ];
+
+        // DB::table('m_level')->insert($data);
+        // return 'Insert data baru berhasil';
+
+        // $row = DB::table('m_level')->where('level_kode', 'CUS')->update(['level_nama' => 'Pelanggan']);
+        // return 'Update data berhasil, jumlah data yang diupdate: '.$row. ' baris';
+
+        // $row = DB::table('m_level')->where('level_kode', 'CUS')->delete();
+        // return 'Delete data berhasil, jumlah data yang dihapus: '.$row. ' baris';
+
+        $data = DB::table('m_level')->get();
         return view('level', ['data' => $data]);
     }
 

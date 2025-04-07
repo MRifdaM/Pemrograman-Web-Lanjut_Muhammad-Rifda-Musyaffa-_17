@@ -16,8 +16,30 @@ class PenjualanDetailController extends Controller
 
         // $row = DB::delete('delete from t_penjualan_detail where detail_id = ?', [31]);
         // return 'Delete data berhasil, jumlah data yang dihapus: '.$row. ' baris';
-        
-        $data = DB::select('select * from t_penjualan_detail');
+
+        // $data = DB::select('select * from t_penjualan_detail');
+        // return view('penjualan_detail', ['data' => $data]);
+
+         //=======================================================================================Jobsheet 3 Praktikum 5=========================================================================================
+        // $data = [
+        //     'penjualan_id' => '11',
+        //     'barang_id' => '11',
+        //     'jumlah_barang' => '2',
+        //     'harga_barang' => '120000',
+        //     'created_at' => now()
+        // ];
+
+        // DB::table('t_penjualan_detail')->insert($data);
+        // return 'Insert data baru berhasil';
+
+        // $row = DB::table('t_penjualan_detail')->where('detail_id', '31')->update(['jumlah_barang' => '3']);
+        // return 'Update data berhasil, jumlah data yang diupdate: '.$row. ' baris';
+
+        // $row = DB::table('t_penjualan_detail')->where('detail_id', '31')->delete();
+        // return 'Delete data berhasil, jumlah data yang dihapus: '.$row. ' baris';
+
+        $data = DB::table('t_penjualan_detail')->get();
         return view('penjualan_detail', ['data' => $data]);
+
     }
 }

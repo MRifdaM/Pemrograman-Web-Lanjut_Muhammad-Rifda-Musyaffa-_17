@@ -18,7 +18,29 @@ class PenjualanController extends Controller
         // $row = DB::delete('delete from t_penjualan where penjualan_kode = ?', ['PNJ11']);
         // return 'Delete data berhasil, jumlah data yang dihapus: '.$row. ' baris';
 
-        $data = DB::select('select * from t_penjualan');
+        // $data = DB::select('select * from t_penjualan');
+        // return view('penjualan', ['data' => $data]);
+
+         //=======================================================================================Jobsheet 3 Praktikum 5=========================================================================================
+        // $data = [
+        //     'user_id' => '3',
+        //     'pembeli' => 'Seli Bunga',
+        //     'penjualan_kode' => 'PNJ11',
+        //     'tanggal_penjualan' => now(),
+        //     'created_at' => now()
+        // ];
+
+        // DB::table('t_penjualan')->insert($data);
+        // return 'Insert data baru berhasil';
+
+        // $row = DB::table('t_penjualan')->where('penjualan_kode', 'PNJ11')->update(['pembeli' => 'Selina Bunga']);
+        // return 'Update data berhasil, jumlah data yang diupdate: '.$row. ' baris';
+
+        // $row = DB::table('t_penjualan')->where('penjualan_kode', 'PNJ11')->delete();
+        // return 'Delete data berhasil, jumlah data yang dihapus: '.$row. ' baris';
+
+        $data = DB::table('t_penjualan')->get();
         return view('penjualan', ['data' => $data]);
+
     }
 }

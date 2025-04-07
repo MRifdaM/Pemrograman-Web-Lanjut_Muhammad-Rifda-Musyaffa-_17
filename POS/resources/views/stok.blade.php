@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Data Stok</title>
+    <title>Data Stok Barang</title>
 </head>
 <body>
-    <h1>Data Stok</h1>
+    <h1>Data Stok Barang</h1>
     <table border="1" cellpadding="2" cellspacing="0">
         <tr>
             <th>Stok ID</th>

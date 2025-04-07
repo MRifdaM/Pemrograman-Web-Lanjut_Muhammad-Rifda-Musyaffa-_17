@@ -20,8 +20,30 @@ class UserController extends Controller
         // $row = DB::delete('delete from m_user where username = ?', ['kasirBaru']);
         // return 'Delete data berhasil, jumlah data yang dihapus: '.$row. ' baris';
 
-        $data = DB::select('select * from m_user');
+        // $data = DB::select('select * from m_user');
+        // return view('user', ['data' => $data]);
+
+        //=======================================================================================Jobsheet 3 Praktikum 5=========================================================================================
+        // $data = [
+        //     'level_id' => '4',
+        //     'username' => 'Customer1',
+        //     'nama' => 'Pelanggan',
+        //     'password' => Hash::make('123456'),
+        //     'created_at' => now(),
+        // ];
+
+        // DB::table('m_user')->insert($data);
+        // return 'Insert data baru berhasil';
+
+        // $row = DB::table('m_user')->where('username', 'Customer1')->update(['nama' => 'Pelanggan Pertama']);
+        // return 'Update data berhasil, jumlah data yang diupdate: '.$row. ' baris';
+
+        // $row = DB::table('m_user')->where('username', 'Customer1')->delete();
+        // return 'Delete data berhasil, jumlah data yang dihapus: '.$row. ' baris';
+
+        $data = DB::table('m_user')->get();
         return view('user', ['data' => $data]);
+
 
     }
 
