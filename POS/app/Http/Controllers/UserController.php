@@ -55,11 +55,31 @@ class UserController extends Controller
 
         // UserModel::insert($data);
 
-        $data =[
-            'nama' => 'Pelanggan Pertama'
-        ];
+        // $data =[
+        //     'nama' => 'Pelanggan Pertama'
+        // ];
 
-        UserModel::where('username', 'customer-1')->update($data);
+        // UserModel::where('username', 'customer-1')->update($data);
+
+        // $user = UserModel::all();
+        // return view('user', ['data' => $user]);
+
+        //=======================================================================================Jobsheet 4 Praktikum 1============================================================================================
+        $data = [
+            'level_id' => 2,
+            'username' => 'manager_dua',
+            'nama' => 'Manager Dua',
+            'password' => Hash::make('12345')
+        ];
+        UserModel::create($data);
+
+        // $data = [
+        //     'level_id' => 2,
+        //     'username' => 'manager_tiga',
+        //     'nama' => 'Manager Tiga',
+        //     'password' => Hash::make('12345')
+        // ];
+        // UserModel::create($data);
 
         $user = UserModel::all();
         return view('user', ['data' => $user]);

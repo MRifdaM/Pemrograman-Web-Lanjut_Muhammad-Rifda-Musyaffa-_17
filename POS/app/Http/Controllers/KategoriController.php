@@ -50,11 +50,29 @@ class KategoriController extends Controller
 
         // KategoriModel::insert($data);
 
-        $data =[
-            'kategori_nama' => 'Camilan'
-        ];
+        // $data =[
+        //     'kategori_nama' => 'Camilan'
+        // ];
 
-        KategoriModel::where('kategori_kode', 'SNK')->update($data);
+        // KategoriModel::where('kategori_kode', 'SNK')->update($data);
+
+        // $kategori = KategoriModel::all();
+        // return view('kategori', ['data' => $kategori]);
+
+        //=======================================================================================Jobsheet 4 Praktikum 1============================================================================================
+        $data = [
+            'kategori_kode' => 'OTM',
+            'kategori_nama' => 'Otomotif',
+            'deskripsi' => 'Kategori untuk barang otomotif',
+        ];
+        KategoriModel::create($data);
+
+        // $data = [
+        //     'kategori_kode' => 'ATL',
+        //     'kategori_nama' => 'Alat Tulis',
+        //     'deskripsi' => 'Kategori untuk peralatan tulis',
+        // ];
+        // KategoriModel::create($data);
 
         $kategori = KategoriModel::all();
         return view('kategori', ['data' => $kategori]);

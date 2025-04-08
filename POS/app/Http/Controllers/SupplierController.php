@@ -52,11 +52,29 @@ class SupplierController extends Controller
 
         // SupplierModel::insert($data);
 
-        $data =[
-            'supplier_nama' => 'PT Rahmat Kejayaan',
-        ];
+        // $data =[
+        //     'supplier_nama' => 'PT Rahmat Kejayaan',
+        // ];
 
-        SupplierModel::where('supplier_kode', 'SPL104')->update($data);
+        // SupplierModel::where('supplier_kode', 'SPL104')->update($data);
+
+        // $supplier = SupplierModel::all();
+        // return view('supplier', ['data' => $supplier]);
+
+        //=======================================================================================Jobsheet 4 Praktikum 1============================================================================================
+        $data = [
+            'supplier_kode' => 'SPL105',
+            'supplier_nama' => 'PT Sumber Makmur Abadi',
+            'supplier_alamat' => 'JL Merpati No. 5',
+        ];
+        SupplierModel::create($data);
+
+        // $data = [
+        //     'supplier_kode' => 'SPL106',
+        //     'supplier_nama' => 'PT Raya Asri Abadi',
+        //     'supplier_alamat' => 'JL Bunga Mawar No. 10',
+        // ];
+        // SupplierModel::create($data);
 
         $supplier = SupplierModel::all();
         return view('supplier', ['data' => $supplier]);

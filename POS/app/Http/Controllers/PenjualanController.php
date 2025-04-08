@@ -54,11 +54,31 @@ class PenjualanController extends Controller
 
         // PenjualanModel::insert($data);
 
-        $data =[
-            'pembeli' => 'Selina Bunga',
-        ];
+        // $data =[
+        //     'pembeli' => 'Selina Bunga',
+        // ];
 
-        PenjualanModel::where('penjualan_kode', 'PNJ11')->update($data);
+        // PenjualanModel::where('penjualan_kode', 'PNJ11')->update($data);
+
+        // $penjualan = PenjualanModel::all();
+        // return view('penjualan', ['data' => $penjualan]);
+
+        //=======================================================================================Jobsheet 4 Praktikum 1============================================================================================
+        $data = [
+            'user_id' => '2',
+            'pembeli' => 'Bambang Stria',
+            'penjualan_kode' => 'PNJ12',
+            'tanggal_penjualan' => now(),
+        ];
+        PenjualanModel::create($data);
+
+        // $data = [
+        //     'user_id' => '2',
+        //     'pembeli' => 'Silvia Eka',
+        //     'penjualan_kode' => 'PNJ13',
+        //     'tanggal_penjualan' => now(),
+        // ];
+        // PenjualanModel::create($data);
 
         $penjualan = PenjualanModel::all();
         return view('penjualan', ['data' => $penjualan]);

@@ -56,11 +56,32 @@ class StokController extends Controller
 
         // StokModel::insert($data);
 
-        $data =[
-            'stok_jumlah' => '150'
-        ];
+        // $data =[
+        //     'stok_jumlah' => '150'
+        // ];
 
-        StokModel::where('stok_id', '11')->update($data);
+        // StokModel::where('stok_id', '11')->update($data);
+
+        // $stok = StokModel::all();
+
+        //=======================================================================================Jobsheet 4 Praktikum 1============================================================================================
+        $data = [
+            'barang_id' => '12',
+            'user_id' => '1',
+            'supplier_id' => '3',
+            'stok_tanggal_masuk' => now(),
+            'stok_jumlah' => '60'
+        ];
+        StokModel::create($data);
+
+        // $data = [
+        //     'barang_id' => '13',
+        //     'user_id' => '1',
+        //     'supplier_id' => '2',
+        //     'stok_tanggal_masuk' => now(),
+        //     'stok_jumlah' => '45'
+        // ];
+        // StokModel::create($data);
 
         $stok = StokModel::all();
         return view('stok', ['data' => $stok]);

@@ -56,11 +56,33 @@ class BarangController extends Controller
 
         // BarangModel::insert($data);
 
-        $data =[
-            'harga_jual' => '110000'
-        ];
+        // $data =[
+        //     'harga_jual' => '110000'
+        // ];
 
-        BarangModel::where('barang_kode', 'ELT-003')->update($data);
+        // BarangModel::where('barang_kode', 'ELT-003')->update($data);
+
+        // $barang = BarangModel::all();
+        // return view('barang', ['data' => $barang]);
+
+        //=======================================================================================Jobsheet 4 Praktikum 1============================================================================================
+        $data = [
+            'kategori_id' => '2',
+            'barang_kode' => 'PKA-003',
+            'barang_nama' => 'Jeans Carvil',
+            'harga_jual' => '400000',
+            'harga_beli' => '300000',
+        ];
+        BarangModel::create($data);
+
+        // $data = [
+        //     'kategori_id' => '4',
+        //     'barang_kode' => 'BKU-003',
+        //     'barang_nama' => 'The Psychology of Money',
+        //     'harga_jual' => '90000',
+        //     'harga_beli' => '80000',
+        // ];
+        // BarangModel::create($data);
 
         $barang = BarangModel::all();
         return view('barang', ['data' => $barang]);
