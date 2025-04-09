@@ -62,12 +62,12 @@ class SupplierController extends Controller
         // return view('supplier', ['data' => $supplier]);
 
         //=======================================================================================Jobsheet 4 Praktikum 1============================================================================================
-        $data = [
-            'supplier_kode' => 'SPL105',
-            'supplier_nama' => 'PT Sumber Makmur Abadi',
-            'supplier_alamat' => 'JL Merpati No. 5',
-        ];
-        SupplierModel::create($data);
+        // $data = [
+        //     'supplier_kode' => 'SPL105',
+        //     'supplier_nama' => 'PT Sumber Makmur Abadi',
+        //     'supplier_alamat' => 'JL Merpati No. 5',
+        // ];
+        // SupplierModel::create($data);
 
         // $data = [
         //     'supplier_kode' => 'SPL106',
@@ -76,8 +76,56 @@ class SupplierController extends Controller
         // ];
         // SupplierModel::create($data);
 
+        // $supplier = SupplierModel::all();
+        // return view('supplier', ['data' => $supplier]);
+
+        //=======================================================================================Jobsheet 4 Praktikum 2.6============================================================================================
         $supplier = SupplierModel::all();
         return view('supplier', ['data' => $supplier]);
     }
 
+    //==========================================================================================Jobsheet 4 Praktikum 2.6===========================================================================================
+    public function tambah()
+    {
+        return view('supplier_tambah');
+    }
+
+    public function tambah_simpan(Request $request)
+    {
+        SupplierModel::create([
+            'supplier_kode' => $request->supplier_kode,
+            'supplier_nama' => $request->supplier_nama,
+            'supplier_alamat' => $request->supplier_alamat,
+        ]);
+
+        return redirect('/supplier');
+    }
+
+    public function ubah($id)
+    {
+        $supplier = SupplierModel::find($id);
+        return view('supplier_ubah', ['data' => $supplier]);
+    }
+
+    public function ubah_simpan($id, Request $request)
+    {
+        $supplier = SupplierModel::find($id);
+
+        $supplier->supplier_kode   = $request->supplier_kode;
+        $supplier->supplier_nama   = $request->supplier_nama;
+        $supplier->supplier_alamat = $request->supplier_alamat;
+
+        $supplier->save();
+
+        return redirect('/supplier');
+    }
+
+    public function hapus($id)
+    {
+        $supplier = SupplierModel::find($id);
+        $supplier->delete();
+
+        return redirect('/supplier');
+    }
+    //============================================================================================================================================================================================
 }
