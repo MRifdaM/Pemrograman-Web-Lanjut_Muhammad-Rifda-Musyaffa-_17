@@ -20,7 +20,7 @@ class PenjualanModel extends Model
         'user_id',
         'pembeli',
         'penjualan_kode',
-        'tanggal_penjualan'
+        'penjualan_tanggal'
     ];
 
     // protected $fillable = [

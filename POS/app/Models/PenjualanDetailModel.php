@@ -18,8 +18,8 @@ class PenjualanDetailModel extends Model
     protected $fillable = [
         'penjualan_id',
         'barang_id',
-        'jumlah_barang',
-        'harga_barang'
+        'jumlah',
+        'harga'
     ];
 
     // protected $fillable = [

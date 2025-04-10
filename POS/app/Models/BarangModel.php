@@ -20,8 +20,8 @@ class BarangModel extends Model
         'kategori_id',
         'barang_kode',
         'barang_nama',
+        'harga_beli',
         'harga_jual',
-        'harga_beli'
     ];
 
     // protected $fillable = [

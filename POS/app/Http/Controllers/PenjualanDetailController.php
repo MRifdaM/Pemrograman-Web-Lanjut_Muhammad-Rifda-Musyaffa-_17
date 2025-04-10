@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\BarangModel;
-use App\Models\PenjualanDetailModel;
-use App\Models\PenjualanModel;
 use Illuminate\Http\Request;
+use App\Models\PenjualanModel;
 use Illuminate\Support\Facades\DB;
+use App\Models\PenjualanDetailModel;
+use Yajra\DataTables\Facades\DataTables;
 
 class PenjualanDetailController extends Controller
 {
-    public function index(){
+    public function index(string $penjualan_id){
         // DB::insert('insert into t_penjualan_detail(penjualan_id, barang_id, jumlah, harga, created_at) values(?, ?, ?, ?, ?)', [11, 11, 2, 120000, now()]);
         // return 'Insert data baru berhasil';
 
@@ -84,9 +85,33 @@ class PenjualanDetailController extends Controller
         // $penjualanDetail = PenjualanDetailModel::all();
         // return view('penjualan_detail', ['data' => $penjualanDetail]);
         //=======================================================================================Jobsheet 4 Praktikum 2.6===========================================================================================
-        $penjualanDetail = PenjualanDetailModel::with('barang', 'penjualan')->get();
-        return view('penjualanDetail', ['data' => $penjualanDetail]);
+        // $penjualanDetail = PenjualanDetailModel::with('barang', 'penjualan')->get();
+        // return view('penjualanDetail', ['data' => $penjualanDetail]);
 
+        //===========================================================================================Jobsheet 5==============================================================================================
+        $penjualan = PenjualanModel::find($penjualan_id);
+
+        $breadcrumb = (object) [
+            'title' => 'Daftar Detail Penjualan ' . $penjualan->penjualan_kode,
+            'list'  => ['Home', 'Penjualan', 'Detail']
+        ];
+
+        $page = (object) [
+            'title' => 'Daftar penjualan yang terdaftar dalam sistem'
+        ];
+
+        $activeMenu = 'penjualan';
+
+
+        $barangs = BarangModel::all();
+
+        return view('penjualanDetail.index', [
+            'breadcrumb' => $breadcrumb,
+            'page'       => $page,
+            'penjualan' => $penjualan,
+            'barangs'      => $barangs,
+            'activeMenu' => $activeMenu
+        ]);
     }
 
     //========================================================================================Jobsheet 4 Praktikum 2.6===========================================================================================
@@ -138,5 +163,212 @@ class PenjualanDetailController extends Controller
         $detail->delete();
 
         return redirect('/penjualan-detail');
+    }
+    //====================================================================================================================================================================================================================
+
+    //================================================================================================Jobsheet 5==========================================================================================================
+    public function list(Request $request, string $penjualan_id)
+    {
+        $penjualanDetails = PenjualanDetailModel::select(
+            'detail_id',
+            'penjualan_id',
+            'barang_id',
+            'jumlah',
+            'harga'
+        )
+        ->with(['penjualan', 'barang'])
+        ->where('penjualan_id', $penjualan_id);
+
+        $barang_id = $request->input('barang_id');
+        if (!empty($barang_id)) {
+            $penjualanDetails->where('barang_id', $barang_id);
+        }
+
+        return DataTables::of($penjualanDetails)
+            ->addIndexColumn() // kolom DT_RowIndex
+            ->addColumn('aksi', function ($penjualanDetails) {
+                // Tombol Detail, Edit, dan Hapus
+                $btn = '<a href="'.url('/penjualan-detail/show/' . $penjualanDetails->detail_id).'"
+                            class="btn btn-info btn-sm">Detail</a> ';
+
+                $btn .= '<a href="'.url('/penjualan-detail/' . $penjualanDetails->detail_id . '/edit').'"
+                            class="btn btn-warning btn-sm">Edit</a> ';
+
+                $btn .= '<form class="d-inline-block" method="POST"
+                            action="'.url('/penjualan-detail/'.$penjualanDetails->detail_id).'">'
+                        . csrf_field()
+                        . method_field('DELETE')
+                        . '<button type="submit" class="btn btn-danger btn-sm"
+                            onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">
+                            Hapus
+                        </button></form>';
+
+                return $btn;
+            })
+            ->rawColumns(['aksi'])
+            ->make(true);
+    }
+
+    public function create(string $penjualan_id)
+    {
+        $penjualan = PenjualanModel::find($penjualan_id);
+
+        $breadcrumb = (object) [
+            'title' => 'Tambah Detail Penjualan ' . $penjualan->penjualan_kode,
+            'list'  => ['Home', 'Penjualan', 'Detail', 'Tambah']
+        ];
+
+        $page = (object) [
+            'title' => 'Tambah Detail Penjualan untuk  ' . $penjualan->penjualan_kode
+        ];
+
+        $activeMenu = 'penjualan';
+
+
+        $barangs = BarangModel::all();
+
+        return view('penjualanDetail.create', [
+            'breadcrumb' => $breadcrumb,
+            'page'       => $page,
+            'penjualan'  => $penjualan,
+            'barangs'      => $barangs,
+            'activeMenu' => $activeMenu
+        ]);
+    }
+
+    // Menyimpan data penjualan baru
+    public function store(Request $request)
+    {
+        $request->validate([
+            'penjualan_id' => 'required|',
+            'barang_id'    => 'required|integer',
+            'jumlah'       => 'required|integer',
+            'harga'        => 'required|numeric',
+        ]);
+
+        try {
+            // Proses dekripsi penjualan_id
+            $penjualan_id = decrypt($request->penjualan_id);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            // Jika dekripsi gagal (misalnya, karena data dimanipulasi), kita bisa menangani errornya di sini
+            return redirect()->back()->with('error', 'Data tidak valid.');
+        }
+
+        PenjualanDetailModel::create([
+            'penjualan_id' => $penjualan_id,
+            'barang_id'    => $request->barang_id,
+            'jumlah'       => $request->jumlah,
+            'harga'        => $request->harga,
+        ]);
+
+        return redirect('/penjualan-detail/'. $penjualan_id)->with('success', 'Data penjualan berhasil disimpan');
+    }
+
+    public function show(string $id)
+    {
+        $penjualanDetail = PenjualanDetailModel::with(['penjualan', 'barang'])->find($id);
+
+        $breadcrumb = (object) [
+            'title' => 'Detail Penjualan',
+            'list'  => ['Home', 'Penjualan', 'Detail', 'Show']
+        ];
+
+        $page = (object) [
+            'title' => 'Detail penjualan untuk ID ' . $penjualanDetail->penjualan_id
+        ];
+
+        $activeMenu = 'penjualan';
+
+        return view('penjualanDetail.show', [
+            'breadcrumb' => $breadcrumb,
+            'page'       => $page,
+            'penjualanDetail'  => $penjualanDetail,
+            'activeMenu' => $activeMenu
+        ]);
+    }
+
+    public function edit(string $id)
+    {
+
+        $penjualanDetail = PenjualanDetailModel::with(['penjualan', 'barang'])->find($id);
+
+        if (!$penjualanDetail) {
+            return redirect('/penjualan')->with('error', 'Data detail penjualan tidak ditemukan');
+        }
+
+        $barangs = BarangModel::all();
+
+        $breadcrumb = (object) [
+            'title' => 'Edit Detail Penjualan',
+            'list'  => ['Home', 'Penjualan', 'Detail', 'Edit']
+        ];
+
+        $page = (object) [
+            'title' => 'Edit Detail Penjualan'
+        ];
+
+        $activeMenu = 'penjualan';
+
+        return view('penjualanDetail.edit', [
+            'breadcrumb'       => $breadcrumb,
+            'page'             => $page,
+            'penjualanDetail'  => $penjualanDetail,
+            'barangs'          => $barangs,
+            'activeMenu'       => $activeMenu
+        ]);
+    }
+
+    public function update(Request $request, string $id)
+    {
+
+        $request->validate([
+            'penjualan_id' => 'required', // nilai terenkripsi, tidak bisa divalidasi sebagai integer sebelum dekripsi
+            'barang_id'    => 'required|integer',
+            'jumlah'       => 'required|integer',
+            'harga'        => 'required|numeric',
+        ]);
+
+        // Proses dekripsi penjualan_id
+        try {
+            $penjualan_id = decrypt($request->penjualan_id);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            return redirect()->back()->with('error', 'Data tidak valid. Mungkin terjadi manipulasi data.');
+        }
+
+        // Cari data detail penjualan berdasarkan $id
+        $penjualanDetail = PenjualanDetailModel::find($id);
+        if (!$penjualanDetail) {
+            return redirect('/penjualan')->with('error', 'Data detail penjualan tidak ditemukan');
+        }
+
+        $penjualanDetail->update([
+            'penjualan_id' => $penjualan_id,
+            'barang_id'    => $request->barang_id,
+            'jumlah'       => $request->jumlah,
+            'harga'        => $request->harga,
+        ]);
+
+        return redirect('/penjualan-detail/' . $penjualan_id)
+            ->with('success', 'Data detail penjualan berhasil diubah');
+    }
+
+    public function destroy(string $id)
+    {
+        $check = PenjualanDetailModel::find($id);
+        $penjualan_id = $check->penjualan_id;
+        if (!$check) {
+            return redirect('/penjualan-detail/'. $penjualan_id)->with('error', 'Data penjualan tidak ditemukan');
+        }
+
+        try {
+            PenjualanDetailModel::destroy($id);
+            return redirect('/penjualan-detail/'. $penjualan_id)->with('success', 'Data penjualan berhasil dihapus');
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Jika ada constraint foreign key, dsb.
+            return redirect('/penjualan-detail/'. $penjualan_id)->with(
+                'error',
+                'Data penjualan gagal dihapus karena masih ada data lain yang terkait'
+            );
+        }
     }
 }

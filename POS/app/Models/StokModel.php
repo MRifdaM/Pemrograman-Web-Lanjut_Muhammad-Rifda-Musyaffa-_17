@@ -19,7 +19,7 @@ class StokModel extends Model
         'barang_id',
         'user_id',
         'supplier_id',
-        'stok_tanggal_masuk',
+        'stok_tanggal',
         'stok_jumlah'
     ];
 
