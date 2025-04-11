@@ -115,6 +115,8 @@ Route::group(['prefix' => 'user'], function () {
     Route::post('/list', [UserController::class, 'list']);        // menampilkan data user dalam bentuk json untuk datatables
     Route::get('/create', [UserController::class, 'create']);    // menampilkan halaman form tambah user
     Route::post('/', [UserController::class, 'store']);          // menyimpan data user baru
+    Route::get('/create_ajax', [UserController::class, 'create_ajax']);  // menampilkan halaman form tambah user Ajax
+    Route::post('/ajax', [UserController::class, 'store_ajax']);
     Route::get('/{id}', [UserController::class, 'show']);        // menampilkan detail user
     Route::get('/{id}/edit', [UserController::class, 'edit']);  // menampilkan halaman form edit user
     Route::put("/{id}", [UserController::class, 'update']);       // menyimpan perubahan data user
@@ -126,6 +128,8 @@ Route::group(['prefix' => 'level'], function () {
     Route::post('/list', [LevelController::class, 'list']);        // menampilkan data level dalam bentuk json untuk datatables
     Route::get('/create', [LevelController::class, 'create']);    // menampilkan halaman form tambah level
     Route::post('/', [LevelController::class, 'store']);          // menyimpan data level baru
+    Route::get('/create_ajax', [LevelController::class, 'create_ajax']);
+    Route::post('/ajax', [LevelController::class, 'store_ajax']);
     Route::get('/{id}', [LevelController::class, 'show']);        // menampilkan detail level
     Route::get('/{id}/edit', [LevelController::class, 'edit']);  // menampilkan halaman form edit level
     Route::put("/{id}", [LevelController::class, 'update']);       // menyimpan perubahan data level
@@ -137,6 +141,8 @@ Route::group(['prefix' => 'kategori'], function () {
     Route::post('/list', [KategoriController::class, 'list']);
     Route::get('/create', [KategoriController::class, 'create']);
     Route::post('/', [KategoriController::class, 'store']);
+    Route::get('/create_ajax', [KategoriController::class, 'create_ajax']);
+    Route::post('/ajax', [KategoriController::class, 'store_ajax']);
     Route::get('/{id}', [KategoriController::class, 'show']);
     Route::get('/{id}/edit', [KategoriController::class, 'edit']);
     Route::put("/{id}", [KategoriController::class, 'update']);
@@ -148,6 +154,8 @@ Route::group(['prefix' => 'supplier'], function () {
     Route::post('/list', [SupplierController::class, 'list']);
     Route::get('/create', [SupplierController::class, 'create']);
     Route::post('/', [SupplierController::class, 'store']);
+    Route::get('/create_ajax', [SupplierController::class, 'create_ajax']);
+    Route::post('/ajax', [SupplierController::class, 'store_ajax']);
     Route::get('/{id}', [SupplierController::class, 'show']);
     Route::get('/{id}/edit', [SupplierController::class, 'edit']);
     Route::put("/{id}", [SupplierController::class, 'update']);
@@ -158,6 +166,8 @@ Route::group(['prefix' => 'barang'], function () {
     Route::post('/list', [BarangController::class, 'list']);
     Route::get('/create', [BarangController::class, 'create']);
     Route::post('/', [BarangController::class, 'store']);
+    Route::get('/create_ajax', [BarangController::class, 'create_ajax']);
+    Route::post('/ajax', [BarangController::class, 'store_ajax']);
     Route::get('/{id}', [BarangController::class, 'show']);
     Route::get('/{id}/edit', [BarangController::class, 'edit']);
     Route::put("/{id}", [BarangController::class, 'update']);
@@ -169,6 +179,8 @@ Route::group(['prefix' => 'stok'], function () {
     Route::post('/list', [StokController::class, 'list']);
     Route::get('/create', [StokController::class, 'create']);
     Route::post('/', [StokController::class, 'store']);
+    Route::get('/create_ajax', [StokController::class, 'create_ajax']);
+    Route::post('/ajax', [StokController::class, 'store_ajax']);
     Route::get('/{id}', [StokController::class, 'show']);
     Route::get('/{id}/edit', [StokController::class, 'edit']);
     Route::put("/{id}", [StokController::class, 'update']);
@@ -180,6 +192,8 @@ Route::group(['prefix' => 'penjualan'], function () {
     Route::post('/list', [PenjualanController::class, 'list']);
     Route::get('/create', [PenjualanController::class, 'create']);
     Route::post('/', [PenjualanController::class, 'store']);
+    Route::get('/create_ajax', [PenjualanController::class, 'create_ajax']);
+    Route::post('/ajax', [PenjualanController::class, 'store_ajax']);
     Route::get('/{id}/edit', [PenjualanController::class, 'edit']);
     Route::put("/{id}", [PenjualanController::class, 'update']);
     Route::delete('/{id}', [PenjualanController::class, 'destroy']);
@@ -190,6 +204,8 @@ Route::group(['prefix' => 'penjualan-detail'], function () {
     Route::post('/list/{penjualan_id}', [PenjualanDetailController::class, 'list']);
     Route::get('/create/{penjualan_id}', [PenjualanDetailController::class, 'create']);
     Route::post('/', [PenjualanDetailController::class, 'store']);
+    Route::get('/create_ajax/{penjualan_id}', [PenjualanDetailController::class, 'create_ajax']);
+    Route::post('/ajax', [PenjualanDetailController::class, 'store_ajax']);
     Route::get('/show/{id}', [PenjualanDetailController::class, 'show']);
     Route::get('/{id}/edit', [PenjualanDetailController::class, 'edit']);
     Route::put("/{id}", [PenjualanDetailController::class, 'update']);

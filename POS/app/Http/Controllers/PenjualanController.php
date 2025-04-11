@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\PenjualanModel;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class PenjualanController extends Controller
 {
@@ -349,5 +350,42 @@ class PenjualanController extends Controller
                 'Data penjualan gagal dihapus karena masih ada data lain yang terkait'
             );
         }
+    }
+    //==================================================================================================================================================================================================
+
+    //========================================================================================Jobsheet 6================================================================================================
+    public function create_ajax()
+    {
+        $users = UserModel::all();
+        return view('penjualan.create_ajax')->with('users', $users);
+    }
+
+    // Simpan data penjualan baru
+    public function store_ajax(Request $request)
+    {
+        $rules = [
+            'user_id'           => ['required', 'integer'],
+            'pembeli'           => ['required', 'string', 'max:100'],
+            'penjualan_kode'    => ['required', 'string', 'max:20', 'unique:t_penjualan,penjualan_kode'],
+            'penjualan_tanggal' => ['required', 'date'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false, // response status, false: error/gagal, true: berhasil
+                'message' => 'Validasi Gagal',
+                'msgField' => $validator->errors() // pesan error validasi
+            ]);
+        }
+
+        PenjualanModel::create($request->all());
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Data penjualan berhasil disimpan'
+        ]);
+
     }
 }

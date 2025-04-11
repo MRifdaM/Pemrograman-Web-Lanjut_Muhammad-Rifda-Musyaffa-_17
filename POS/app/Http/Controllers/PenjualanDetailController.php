@@ -8,6 +8,8 @@ use App\Models\PenjualanModel;
 use Illuminate\Support\Facades\DB;
 use App\Models\PenjualanDetailModel;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class PenjualanDetailController extends Controller
 {
@@ -249,7 +251,7 @@ class PenjualanDetailController extends Controller
         try {
             // Proses dekripsi penjualan_id
             $penjualan_id = decrypt($request->penjualan_id);
-        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+        } catch (DecryptException $e) {
             // Jika dekripsi gagal (misalnya, karena data dimanipulasi), kita bisa menangani errornya di sini
             return redirect()->back()->with('error', 'Data tidak valid.');
         }
@@ -331,7 +333,7 @@ class PenjualanDetailController extends Controller
         // Proses dekripsi penjualan_id
         try {
             $penjualan_id = decrypt($request->penjualan_id);
-        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+        } catch (DecryptException $e) {
             return redirect()->back()->with('error', 'Data tidak valid. Mungkin terjadi manipulasi data.');
         }
 
@@ -370,5 +372,56 @@ class PenjualanDetailController extends Controller
                 'Data penjualan gagal dihapus karena masih ada data lain yang terkait'
             );
         }
+    }
+    //====================================================================================================================================================================================================================
+
+    //================================================================================================Jobsheet 6==========================================================================================================
+    public function create_ajax($penjualan_id)
+    {
+        $penjualan = PenjualanModel::find($penjualan_id);
+
+        $barangs = BarangModel::all();
+        return view('penjualanDetail.create_ajax')->with(['penjualan' => $penjualan, 'barangs' => $barangs]);
+    }
+
+    // Simpan data detail penjualan baru
+    public function store_ajax(Request $request)
+    {
+        $rules = [
+            'penjualan_id' => ['required'], // Dikirim dalam bentuk terenkripsi
+            'barang_id'    => ['required', 'integer'],
+            'jumlah'       => ['required', 'integer'],
+            'harga'        => ['required', 'numeric'],
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false, // response status, false: error/gagal, true: berhasil
+                'message' => 'Validasi Gagal',
+                'msgField' => $validator->errors() // pesan error validasi
+            ]);
+        }
+
+        // Dekripsi penjualan_id
+        try {
+            $penjualan_id = decrypt($request->penjualan_id);
+        } catch (DecryptException $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Data tidak valid.'
+            ]);
+        }
+
+        $data = $request->all();
+        $data['penjualan_id'] = $penjualan_id;
+        PenjualanDetailModel::create($data);
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Data detail penjualan berhasil disimpan'
+        ]);
+
     }
 }

@@ -6,6 +6,7 @@
         <h3 class="card-title">{{ $page->title }}</h3>
         <div class="card-tools">
             <a class="btn btn-sm btn-primary mt-1" href="{{ url('stok/create') }}">Tambah</a>
+            <button onclick="modalAction('{{ url('/stok/create_ajax') }}')" class="btn btn-success">Tambah Ajax</button>
         </div>
     </div>
     <div class="card-body">
@@ -71,6 +72,8 @@
         </table>
     </div>
 </div>
+<div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" data-width="75%" aria-hidden="true"></div>
+</div>
 @endsection
 
 @push('css')
@@ -79,67 +82,73 @@
 
 @push('js')
 <script>
+    function modalAction(url = '') {
+        $('#myModal').load(url, function () {
+            $('#myModal').modal('show');
+        });
+    }
 
-$(document).ready(function() {
-    var dataStok = $('#table_stok').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: {
-            "url": "{{ url('stok/list') }}", // Pastikan route ini sesuai
-            "type": "POST",
-            "data": function (d) {
-                d.barang_id   = $('#barang_id').val();
-                d.user_id     = $('#user_id').val();
-                d.supplier_id = $('#supplier_id').val();
-            }
-        },
-        searchDelay: 1000,
-        columns: [
-            {
-                data: "DT_RowIndex",
-                className: "text-center",
-                orderable: false,
-                searchable: false
+    var dataStok;
+    $(document).ready(function() {
+        dataStok = $('#table_stok').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                "url": "{{ url('stok/list') }}", // Pastikan route ini sesuai
+                "type": "POST",
+                "data": function (d) {
+                    d.barang_id   = $('#barang_id').val();
+                    d.user_id     = $('#user_id').val();
+                    d.supplier_id = $('#supplier_id').val();
+                }
             },
-            {
-                data: "barang.barang_nama",
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: "user.username",
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: "supplier.supplier_nama",
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: "stok_tanggal",
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: "stok_jumlah",
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: "aksi",
-                className: "",
-                orderable: false,
-                searchable: false
-            }
-        ]
+            searchDelay: 1000,
+            columns: [
+                {
+                    data: "DT_RowIndex",
+                    className: "text-center",
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: "barang.barang_nama",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "user.username",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "supplier.supplier_nama",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "stok_tanggal",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "stok_jumlah",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "aksi",
+                    className: "",
+                    orderable: false,
+                    searchable: false
+                }
+            ]
+        });
+
+        // Reload DataTables jika filter berubah
+        $('#barang_id, #user_id, #supplier_id').on('change', function() {
+            dataStok.ajax.reload();
+        });
+
     });
-
-    // Reload DataTables jika filter berubah
-    $('#barang_id, #user_id, #supplier_id').on('change', function() {
-        dataStok.ajax.reload();
-    });
-
-});
 </script>
 @endpush

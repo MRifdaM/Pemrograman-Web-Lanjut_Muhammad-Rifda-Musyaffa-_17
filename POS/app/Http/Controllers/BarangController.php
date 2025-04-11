@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\KategoriModel;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class BarangController extends Controller
 {
@@ -353,5 +354,46 @@ class BarangController extends Controller
                 'Data barang gagal dihapus karena masih terdapat data lain yang terkait'
             );
         }
+    }
+    //===============================================================================================================================================================================================================
+
+    //============================================================================================Jobsheet 6=========================================================================================================
+    public function create_ajax()
+    {
+        $kategori = KategoriModel::select('kategori_id', 'kategori_nama')->get();
+        return view('barang.create_ajax')->with('kategori', $kategori);
+    }
+
+    public function store_ajax(Request $request)
+    {
+        // cek apakah request berupa ajax
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'kategori_id'  => ['required', 'integer'],
+                'barang_kode'  => ['required', 'string', 'min:3', 'max:10', 'unique:m_barang,barang_kode'],
+                'barang_nama'  => ['required', 'string', 'min:3', 'max:100'],
+                'harga_beli'   => ['required', 'numeric', 'min:0'],
+                'harga_jual'   => ['required', 'numeric', 'min:0']
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false, // response status, false: error/gagal, true: berhasil
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors() // pesan error validasi
+                ]);
+            }
+
+            BarangModel::create($request->all());
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data barang berhasil disimpan'
+            ]);
+        }
+
+        redirect('/');
     }
 }

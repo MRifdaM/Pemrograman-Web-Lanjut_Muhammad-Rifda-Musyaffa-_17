@@ -6,6 +6,7 @@
         <h3 class="card-title">{{ $page->title }}</h3>
         <div class="card-tools">
             <a class="btn btn-sm btn-primary mt-1" href="{{ url('barang/create') }}">Tambah</a>
+            <button onclick="modalAction('{{ url('/barang/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
         </div>
     </div>
     <div class="card-body">
@@ -25,7 +26,7 @@
                         <select class="form-control" id="kategori_id" name="kategori_id">
                             <option value="">- Semua -</option>
                             @foreach($kategori as $kat)
-                                <option value="{{ $kat->kategori_id }}">{{ $kat->nama_kategori }}</option>
+                                <option value="{{ $kat->kategori_id }}">{{ $kat->kategori_nama }}</option>
                             @endforeach
                         </select>
                         <small class="form-text text-muted">Filter berdasarkan kategori</small>
@@ -47,6 +48,7 @@
         </table>
     </div>
 </div>
+<div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" databackdrop="static"data-keyboard="false" data-width="75%" aria-hidden="true"></div>
 @endsection
 
 @push('css')
@@ -54,53 +56,61 @@
 
 @push('js')
 <script>
-$(document).ready(function() {
-    var dataBarang = $('#table_barang').DataTable({
-        serverSide: true,
-        ajax: {
-            "url": "{{ url('barang/list') }}",
-            "dataType": "json",
-            "type": "POST",
-            "data": function(d) {
-                d.kategori_id = $('#kategori_id').val();
-            }
-        },
-        searchDelay: 1000,
-        columns: [
-            {
-                data: "DT_RowIndex",
-                className: "text-center",
-                orderable: false,
-                searchable: false
-            },
-            {
-                data: "barang_kode",
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: "barang_nama",
-                orderable: true,
-                searchable: true
-            },
-            {
-                // Tampilkan nama kategori dari relasi
-                data: "kategori.kategori_nama",
-                orderable: false,
-                searchable: false
-            },
-            {
-                data: "aksi",
-                orderable: false,
-                searchable: false
-            }
-        ]
-    });
+    function modalAction(url = '') {
+        $('#myModal').load(url, function () {
+            $('#myModal').modal('show');
+        });
+    }
 
-    // Saat filter berubah, reload DataTables
-    $('#kategori_id').on('change', function() {
-        dataBarang.ajax.reload();
+    var dataBarang;
+    $(document).ready(function() {
+        dataBarang = $('#table_barang').DataTable({
+            serverSide: true,
+            processing: true,
+            ajax: {
+                "url": "{{ url('barang/list') }}",
+                "dataType": "json",
+                "type": "POST",
+                "data": function(d) {
+                    d.kategori_id = $('#kategori_id').val();
+                }
+            },
+            searchDelay: 1000,
+            columns: [
+                {
+                    data: "DT_RowIndex",
+                    className: "text-center",
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: "barang_kode",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "barang_nama",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    // Tampilkan nama kategori dari relasi
+                    data: "kategori.kategori_nama",
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: "aksi",
+                    orderable: false,
+                    searchable: false
+                }
+            ]
+        });
+
+        // Saat filter berubah, reload DataTables
+        $('#kategori_id').on('change', function() {
+            dataBarang.ajax.reload();
+        });
     });
-});
 </script>
 @endpush

@@ -6,6 +6,7 @@
         <h3 class="card-title">{{ $page->title }}</h3>
         <div class="card-tools">
             <a class="btn btn-sm btn-primary mt-1" href="{{ url('penjualan/create') }}">Tambah</a>
+            <button onclick="modalAction('{{ url('/penjualan/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
         </div>
     </div>
     <div class="card-body">
@@ -48,6 +49,7 @@
         </table>
     </div>
 </div>
+<div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" databackdrop="static"data-keyboard="false" data-width="75%" aria-hidden="true"></div>
 @endsection
 
 @push('css')
@@ -55,58 +57,65 @@
 
 @push('js')
 <script>
-$(document).ready(function() {
-    var dataPenjualan = $('#table_penjualan').DataTable({
-        serverSide: true,
-        processing: true,
-        ajax: {
-        "url": "{{ url('penjualan/list') }}",
-        "dataType": "json",
-        "type": "POST",
-        "data": function(d) {
-            d.user_id = $('#user_id').val();
+    function modalAction(url = '') {
+            $('#myModal').load(url, function () {
+                $('#myModal').modal('show');
+            });
         }
-        },
-        searchDelay: 1000,
-        columns: [
-        {
-            data: "DT_RowIndex",
-            className: "text-center",
-            orderable: false,
-            searchable: false
-        },
-        {
-            data: "penjualan_kode",
-            orderable: true,
-            searchable: true
-        },
-        {
-            data: "user.nama",
-            orderable: true,
-            searchable: true
-        },
-        {
-            data: "pembeli",
-            orderable: true,
-            searchable: true
-        },
-        {
-            data: "penjualan_tanggal",
-            orderable: true,
-            searchable: true
-        },
-        {
-            data: "aksi",
-            orderable: false,
-            searchable: false
-        }
-        ]
-    });
 
-    // Reload DataTables ketika filter user berubah
-    $('#user_id').on('change', function() {
-        dataPenjualan.ajax.reload();
+        var dataPenjualan;
+    $(document).ready(function() {
+        dataPenjualan = $('#table_penjualan').DataTable({
+            serverSide: true,
+            processing: true,
+            ajax: {
+            "url": "{{ url('penjualan/list') }}",
+            "dataType": "json",
+            "type": "POST",
+            "data": function(d) {
+                d.user_id = $('#user_id').val();
+            }
+            },
+            searchDelay: 1000,
+            columns: [
+            {
+                data: "DT_RowIndex",
+                className: "text-center",
+                orderable: false,
+                searchable: false
+            },
+            {
+                data: "penjualan_kode",
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: "user.nama",
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: "pembeli",
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: "penjualan_tanggal",
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: "aksi",
+                orderable: false,
+                searchable: false
+            }
+            ]
+        });
+
+        // Reload DataTables ketika filter user berubah
+        $('#user_id').on('change', function() {
+            dataPenjualan.ajax.reload();
+        });
     });
-});
 </script>
 @endpush

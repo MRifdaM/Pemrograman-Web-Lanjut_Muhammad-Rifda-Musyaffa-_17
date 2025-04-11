@@ -7,6 +7,7 @@
         <div class="card-tools">
             {{-- Tombol tambah detail penjualan, jika diperlukan --}}
             <a class="btn btn-sm btn-primary mt-1" href="{{ url('penjualan-detail/create/'. $penjualan->penjualan_id) }}">Tambah</a>
+            <button onclick="modalAction('{{ url('/penjualan-detail/create_ajax/'. $penjualan->penjualan_id) }}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
         </div>
     </div>
     <div class="card-body">
@@ -54,6 +55,7 @@
         </div>
     </div>
 </div>
+<div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" databackdrop="static"data-keyboard="false" data-width="75%" aria-hidden="true"></div>
 @endsection
 
 @push('css')
@@ -61,61 +63,68 @@
 
 @push('js')
 <script>
-$(document).ready(function() {
-    var penjualan_id = "{{ $penjualan->penjualan_id}}";
-    var dataPenjualanDetail = $('#table_penjualan_detail').DataTable({
-        serverSide: true,
-        processing: true,
-        ajax: {
-            "url": "{{ url('penjualan-detail/list') }}/" + penjualan_id,
-            "dataType": "json",
-            "type": "POST",
-            "data": function(d) {
-                // Ambil nilai barang_id dari filter
-                d.barang_id = $('#barang_id').val();
-            }
-        },
-        searchDelay: 1000,
-        columns: [
-            {
-                data: "DT_RowIndex",
-                className: "text-center",
-                orderable: false,
-                searchable: false
-            },
-            {
-                // Menampilkan penjualan_kode dari relasi penjualan
-                data: "penjualan.penjualan_kode",
-                orderable: true,
-                searchable: true
-            },
-            {
-                // Menampilkan nama barang dari relasi barang
-                data: "barang.barang_nama",
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: "jumlah",
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: "harga",
-                orderable: true,
-                searchable: true
-            },
-            {
-                data: "aksi",
-                orderable: false,
-                searchable: false
-            }
-        ]
-    });
+    function modalAction(url = '') {
+            $('#myModal').load(url, function () {
+                $('#myModal').modal('show');
+            });
+        }
 
-    $('#barang_id').on('change', function() {
-        dataPenjualanDetail.ajax.reload();
+        var dataPenjualanDetail;
+    $(document).ready(function() {
+        var penjualan_id = "{{ $penjualan->penjualan_id}}";
+        dataPenjualanDetail = $('#table_penjualan_detail').DataTable({
+            serverSide: true,
+            processing: true,
+            ajax: {
+                "url": "{{ url('penjualan-detail/list') }}/" + penjualan_id,
+                "dataType": "json",
+                "type": "POST",
+                "data": function(d) {
+                    // Ambil nilai barang_id dari filter
+                    d.barang_id = $('#barang_id').val();
+                }
+            },
+            searchDelay: 1000,
+            columns: [
+                {
+                    data: "DT_RowIndex",
+                    className: "text-center",
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    // Menampilkan penjualan_kode dari relasi penjualan
+                    data: "penjualan.penjualan_kode",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    // Menampilkan nama barang dari relasi barang
+                    data: "barang.barang_nama",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "jumlah",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "harga",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "aksi",
+                    orderable: false,
+                    searchable: false
+                }
+            ]
+        });
+
+        $('#barang_id').on('change', function() {
+            dataPenjualanDetail.ajax.reload();
+        });
     });
-});
 </script>
 @endpush
