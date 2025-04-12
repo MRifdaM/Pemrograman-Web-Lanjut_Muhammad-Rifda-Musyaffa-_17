@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\KategoriModel;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -359,5 +360,40 @@ class KategoriController extends Controller
         }
 
         redirect('/');
+    }
+
+    public function confirm_ajax(string $id) {
+        $kategori = KategoriModel::find($id);
+
+        return view('kategori.confirm_ajax', ['kategori' => $kategori]);
+    }
+
+    public function delete_ajax(Request $request, $id)
+    {
+        // cek apakah request dari ajax
+        if ($request->ajax() || $request->wantsJson()) {
+                $kategori = KategoriModel::find($id);
+                if ($kategori) {
+                    try{
+                        $kategori->delete();
+                        return response()->json([
+                            'status' => true,
+                            'message' => 'Data berhasil dihapus'
+                        ]);
+                    } catch(QueryException $e) {
+                        return response()->json([
+                            'status' => false,
+                            'message' => 'Data kategori gagal dihapus, karena masih ada data lain yang terkait'
+                        ]);
+                    }
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan'
+                    ]);
+                }
+        }
+
+        return redirect('/');
     }
 }

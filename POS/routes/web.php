@@ -122,6 +122,8 @@ Route::group(['prefix' => 'user'], function () {
     Route::put("/{id}", [UserController::class, 'update']);       // menyimpan perubahan data user
     Route::get('/{id}/edit_ajax', [UserController::class, 'edit_ajax']); // menampilkan halaman form edit user Ajax
     Route::put('/{id}/update_ajax', [UserController::class, 'update_ajax']); // menyimpan perubahan data user Ajax
+    Route::get('/{id}/delete_ajax', [UserController::class, 'confirm_ajax']); // Untuk tampilkan form confirm delete user Ajax
+    Route::delete('/{id}/delete_ajax', [UserController::class, 'delete_ajax']); // Untuk hapus data user Ajax
     Route::delete('/{id}', [UserController::class, 'destroy']);  // menghapus data user
 });
 
@@ -137,6 +139,8 @@ Route::group(['prefix' => 'level'], function () {
     Route::put("/{id}", [LevelController::class, 'update']);       // menyimpan perubahan data level
     Route::get('/{id}/edit_ajax', [LevelController::class, 'edit_ajax']); // menampilkan halaman form edit level Ajax
     Route::put('/{id}/update_ajax', [LevelController::class, 'update_ajax']); // menyimpan perubahan data level Ajax
+    Route::get('/{id}/delete_ajax', [LevelController::class, 'confirm_ajax']); // Untuk tampilkan form confirm delete level Ajax
+    Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax']); // Untuk hapus data level Ajax
     Route::delete('/{id}', [LevelController::class, 'destroy']);  // menghapus data level
 });
 
@@ -152,6 +156,8 @@ Route::group(['prefix' => 'kategori'], function () {
     Route::put("/{id}", [KategoriController::class, 'update']);
     Route::get('/{id}/edit_ajax', [KategoriController::class, 'edit_ajax']);
     Route::put('/{id}/update_ajax', [KategoriController::class, 'update_ajax']);
+    Route::get('/{id}/delete_ajax', [KategoriController::class, 'confirm_ajax']);
+    Route::delete('/{id}/delete_ajax', [KategoriController::class, 'delete_ajax']);
     Route::delete('/{id}', [KategoriController::class, 'destroy']);
 });
 
@@ -167,6 +173,8 @@ Route::group(['prefix' => 'supplier'], function () {
     Route::put("/{id}", [SupplierController::class, 'update']);
     Route::get('/{id}/edit_ajax', [SupplierController::class, 'edit_ajax']);
     Route::put('/{id}/update_ajax', [SupplierController::class, 'update_ajax']);
+    Route::get('/{id}/delete_ajax', [SupplierController::class, 'confirm_ajax']);
+    Route::delete('/{id}/delete_ajax', [SupplierController::class, 'delete_ajax']);
     Route::delete('/{id}', [SupplierController::class, 'destroy']);
 });
 Route::group(['prefix' => 'barang'], function () {
@@ -181,6 +189,8 @@ Route::group(['prefix' => 'barang'], function () {
     Route::put("/{id}", [BarangController::class, 'update']);
     Route::get('/{id}/edit_ajax', [BarangController::class, 'edit_ajax']);
     Route::put('/{id}/update_ajax', [BarangController::class, 'update_ajax']);
+    Route::get('/{id}/delete_ajax', [BarangController::class, 'confirm_ajax']);
+    Route::delete('/{id}/delete_ajax', [BarangController::class, 'delete_ajax']);
     Route::delete('/{id}', [BarangController::class, 'destroy']);
 });
 
@@ -196,6 +206,8 @@ Route::group(['prefix' => 'stok'], function () {
     Route::put("/{id}", [StokController::class, 'update']);
     Route::get('/{id}/edit_ajax', [StokController::class, 'edit_ajax']);
     Route::put('/{id}/update_ajax', [StokController::class, 'update_ajax']);
+    Route::get('/{id}/delete_ajax', [StokController::class, 'confirm_ajax']);
+    Route::delete('/{id}/delete_ajax', [StokController::class, 'delete_ajax']);
     Route::delete('/{id}', [StokController::class, 'destroy']);
 });
 
@@ -210,6 +222,8 @@ Route::group(['prefix' => 'penjualan'], function () {
     Route::put("/{id}", [PenjualanController::class, 'update']);
     Route::get('/{id}/edit_ajax', [PenjualanController::class, 'edit_ajax']);
     Route::put('/{id}/update_ajax', [PenjualanController::class, 'update_ajax']);
+    Route::get('/{id}/delete_ajax', [PenjualanController::class, 'confirm_ajax']);
+    Route::delete('/{id}/delete_ajax', [PenjualanController::class, 'delete_ajax']);
     Route::delete('/{id}', [PenjualanController::class, 'destroy']);
 });
 

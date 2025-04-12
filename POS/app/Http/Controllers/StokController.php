@@ -7,6 +7,7 @@ use App\Models\UserModel;
 use App\Models\BarangModel;
 use Illuminate\Http\Request;
 use App\Models\SupplierModel;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -431,6 +432,40 @@ class StokController extends Controller
                 'status'  => false,
                 'message' => 'Data tidak ditemukan.',
             ]);
+        }
+
+        return redirect('/');
+    }
+
+    public function confirm_ajax(string $id)
+    {
+        $stok = StokModel::find($id);
+
+        return view('stok.confirm_ajax', ['stok' => $stok]);
+    }
+    public function delete_ajax(Request $request, $id)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $stok = StokModel::find($id);
+            if ($stok) {
+                try{
+                    $stok->delete();
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Data stok berhasil dihapus.',
+                    ]);
+                } catch(QueryException $e){
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data stok gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini.'
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan.',
+                ]);
+            }
         }
 
         return redirect('/');

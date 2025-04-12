@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\SupplierModel;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -302,7 +303,7 @@ class SupplierController extends Controller
         try {
             SupplierModel::destroy($id);
             return redirect('/supplier')->with('success', 'Data supplier berhasil dihapus');
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             return redirect('/supplier')->with(
                 'error',
                 'Data supplier gagal dihapus karena masih terkait dengan data lain'
@@ -392,5 +393,41 @@ class SupplierController extends Controller
         }
 
         redirect('/');
+    }
+
+    public function confirm_ajax(string $id) {
+        $supplier = SupplierModel::find($id);
+
+        return view('supplier.confirm_ajax', ['supplier' => $supplier]);
+    }
+
+    public function delete_ajax(Request $request, $id)
+    {
+        // cek apakah request dari ajax
+        if ($request->ajax() || $request->wantsJson()) {
+
+            $supplier = SupplierModel::find($id);
+            if ($supplier) {
+                try{
+                    $supplier->delete();
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Data berhasil dihapus'
+                    ]);
+                } catch(QueryException $e){
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data supplier gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini.'
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan'
+                ]);
+            }
+        }
+
+        return redirect('/');
     }
 }
