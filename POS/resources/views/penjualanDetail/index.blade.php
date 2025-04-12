@@ -67,9 +67,9 @@
             $('#myModal').load(url, function () {
                 $('#myModal').modal('show');
             });
-        }
+    }
 
-        var dataPenjualanDetail;
+    var dataPenjualanDetail;
     $(document).ready(function() {
         var penjualan_id = "{{ $penjualan->penjualan_id}}";
         dataPenjualanDetail = $('#table_penjualan_detail').DataTable({

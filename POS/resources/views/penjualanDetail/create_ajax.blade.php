@@ -5,7 +5,7 @@
             <div class="modal-header">
                 <h5 class="modal-title">Tambah Detail Penjualan</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                   <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
@@ -22,8 +22,10 @@
                     <select name="barang_id" id="barang_id" class="form-control" required>
                         <option value="">- Pilih Barang -</option>
                         @foreach ($barangs as $barang)
-                            <option value="{{ $barang->barang_id }}" data-harga="{{ $barang->harga_jual }}">
-                                {{ $barang->barang_nama }} ({{ $barang->harga_jual ?? 'N/A' }})
+                            <option value="{{ $barang->barang_id }}"
+                                data-harga="{{ $barang->harga_jual }}"
+                                data-stok="{{ $barang->stok_sum_stok_jumlah ?? 0 }}">
+                                {{ $barang->barang_nama }} (Rp. {{ number_format($barang->harga_jual, 0, ',', '.') }})
                             </option>
                         @endforeach
                     </select>
@@ -34,16 +36,14 @@
                 <div class="form-group">
                     <label>Jumlah</label>
                     <input type="number" name="jumlah" id="jumlah" class="form-control" required>
+                    <small id="stok-note" class="form-text text-info"></small>
                     <small id="error-jumlah" class="error-text form-text text-danger"></small>
                 </div>
 
                 <!-- Harga (diinput manual) -->
                 <div class="form-group">
                     <label>Harga</label>
-                    <input type="text" name="harga" id="harga" class="form-control" required>
-                    <small class="form-text text-muted">
-                        Catatan: Harga total sebaiknya sesuai dengan hasil perkalian harga jual barang dan jumlah.
-                    </small>
+                    <input type="text" name="harga" id="harga" class="form-control" readonly required>
                     <small id="error-harga" class="error-text form-text text-danger"></small>
                 </div>
             </div>
@@ -57,6 +57,30 @@
 
 <script>
 $(document).ready(function(){
+    let = hargaJual = 0;
+
+    $('#form-tambah').on('change', '#barang_id', function(){
+        var selectedOption = $(this).find(':selected');
+        var stok = selectedOption.data('stok');
+        hargaJual = parseFloat(selectedOption.data('harga')) || 0;
+        console.log('Harga Jual:', hargaJual);
+        if (stok === undefined || stok === null) {
+            stok = 0;
+        }
+        $('#stok-note').text('Stok tersedia: ' + stok);
+        calculatePrice();
+    });
+
+    $('#form-tambah').on('input', '#jumlah', function(){
+        calculatePrice();
+    });
+
+    function calculatePrice() {
+        var jumlah = parseFloat($('#jumlah').val()) || 0;
+        var total = hargaJual * jumlah;
+        $('#harga').val(total);
+    }
+
     $("#form-tambah").validate({
         rules: {
             barang_id: { required: true, number: true },
@@ -76,6 +100,7 @@ $(document).ready(function(){
                             title: "Berhasil",
                             text: response.message
                         });
+                        // reload DataTable jika diperlukan, misalnya:
                         dataPenjualanDetail.ajax.reload();
                     } else {
                         $(".error-text").text("");
