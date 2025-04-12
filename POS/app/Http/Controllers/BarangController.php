@@ -190,20 +190,26 @@ class BarangController extends Controller
             ->addIndexColumn() // kolom DT_RowIndex
             ->addColumn('aksi', function ($barangs) {
                 // Tombol Detail, Edit, dan Hapus
-                $btn = '<a href="'.url('/barang/' . $barangs->barang_id).'"
-                            class="btn btn-info btn-sm">Detail</a> ';
+                // $btn = '<a href="'.url('/barang/' . $barangs->barang_id).'"
+                //             class="btn btn-info btn-sm">Detail</a> ';
 
-                $btn .= '<a href="'.url('/barang/' . $barangs->barang_id . '/edit').'"
-                            class="btn btn-warning btn-sm">Edit</a> ';
+                // $btn .= '<a href="'.url('/barang/' . $barangs->barang_id . '/edit').'"
+                //             class="btn btn-warning btn-sm">Edit</a> ';
 
-                $btn .= '<form class="d-inline-block" method="POST"
-                            action="'.url('/barang/'.$barangs->barang_id).'">'
-                        . csrf_field()
-                        . method_field('DELETE')
-                        . '<button type="submit" class="btn btn-danger btn-sm"
-                            onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">
-                            Hapus
-                          </button></form>';
+                // $btn .= '<form class="d-inline-block" method="POST"
+                //             action="'.url('/barang/'.$barangs->barang_id).'">'
+                //         . csrf_field()
+                //         . method_field('DELETE')
+                //         . '<button type="submit" class="btn btn-danger btn-sm"
+                //             onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">
+                //             Hapus
+                //           </button></form>';
+                $btn = '<button onclick="modalAction(\'' . url('/barang/' . $barangs->barang_id .
+                    '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/barang/' . $barangs->barang_id .
+                    '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/barang/' . $barangs->barang_id .
+                    '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
                 return $btn;
             })
             ->rawColumns(['aksi'])
@@ -395,5 +401,52 @@ class BarangController extends Controller
         }
 
         redirect('/');
+    }
+
+    public function edit_ajax(string $id)
+    {
+        $barang = BarangModel::find($id);
+        $kategori = KategoriModel::select('kategori_id', 'kategori_nama')->get();
+        return view('barang.edit_ajax', ['barang' => $barang, 'kategori' => $kategori]);
+    }
+
+    public function update_ajax(Request $request, $id)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'kategori_id'  => ['required', 'integer'],
+                'barang_kode'  => ['required', 'string', 'min:3', 'max:10', 'unique:m_barang,barang_kode,' . $id . ',barang_id'],
+                'barang_nama'  => ['required', 'string', 'min:3', 'max:100'],
+                'harga_beli'   => ['required', 'numeric', 'min:0'],
+                'harga_jual'   => ['required', 'numeric', 'min:0']
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => false,
+                    'message'  => 'Validasi gagal.',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            $barang = BarangModel::find($id);
+            if ($barang) {
+                $barang->update($request->all());
+
+                return response()->json([
+                    'status'  => true,
+                    'message' => 'Data barang berhasil diupdate.',
+                ]);
+            }
+
+            return response()->json([
+                'status'  => false,
+                'message' => 'Data tidak ditemukan.',
+            ]);
+        }
+
+        return redirect('/');
     }
 }

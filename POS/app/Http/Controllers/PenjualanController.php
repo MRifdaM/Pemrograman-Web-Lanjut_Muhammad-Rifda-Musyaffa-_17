@@ -188,17 +188,19 @@ class PenjualanController extends Controller
                 $btn = '<a href="'.url('/penjualan-detail/' . $penjualans->penjualan_id).'"
                             class="btn btn-info btn-sm">Detail</a> ';
 
-                $btn .= '<a href="'.url('/penjualan/' . $penjualans->penjualan_id . '/edit').'"
-                            class="btn btn-warning btn-sm">Edit</a> ';
+                // $btn .= '<a href="'.url('/penjualan/' . $penjualans->penjualan_id . '/edit').'"
+                //             class="btn btn-warning btn-sm">Edit</a> ';
 
-                $btn .= '<form class="d-inline-block" method="POST"
-                            action="'.url('/penjualan/'.$penjualans->penjualan_id).'">'
-                        . csrf_field()
-                        . method_field('DELETE')
-                        . '<button type="submit" class="btn btn-danger btn-sm"
-                            onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">
-                            Hapus
-                          </button></form>';
+                // $btn .= '<form class="d-inline-block" method="POST"
+                //             action="'.url('/penjualan/'.$penjualans->penjualan_id).'">'
+                //         . csrf_field()
+                //         . method_field('DELETE')
+                //         . '<button type="submit" class="btn btn-danger btn-sm"
+                //             onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">
+                //             Hapus
+                //           </button></form>';
+                $btn .= '<button onclick="modalAction(\'' . url('/penjualan/' . $penjualans->penjualan_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/penjualan/' . $penjualans->penjualan_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
 
                 return $btn;
             })
@@ -387,5 +389,51 @@ class PenjualanController extends Controller
             'message' => 'Data penjualan berhasil disimpan'
         ]);
 
+    }
+
+
+    public function edit_ajax(string $id)
+    {
+        $penjualan = PenjualanModel::find($id);
+        $user = UserModel::select('user_id', 'username')->get();
+        return view('penjualan.edit_ajax', ['penjualan' => $penjualan, 'user' => $user]);
+    }
+
+    public function update_ajax(Request $request, $id)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'user_id'           => ['required', 'integer'],
+                'pembeli'           => ['required', 'string', 'max:100'],
+                'penjualan_kode'    => ['required', 'string', 'max:20', 'unique:t_penjualan,penjualan_kode,'.$id.',penjualan_id'],
+                'penjualan_tanggal' => ['required', 'date'],
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => false,
+                    'message'  => 'Validasi gagal.',
+                    'msgField' => $validator->errors(),
+                ]);
+            }
+
+            $penjualan = PenjualanModel::find($id);
+            if ($penjualan) {
+                $penjualan->update($request->all());
+
+                return response()->json([
+                    'status'  => true,
+                    'message' => 'Data penjualan berhasil diupdate.',
+                ]);
+            }
+
+            return response()->json([
+                'status'  => false,
+                'message' => 'Data tidak ditemukan.',
+            ]);
+        }
+        return redirect('/');
     }
 }

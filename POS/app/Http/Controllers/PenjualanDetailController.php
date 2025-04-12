@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\StokModel;
 use App\Models\BarangModel;
 use Illuminate\Http\Request;
 use App\Models\PenjualanModel;
@@ -380,7 +381,7 @@ class PenjualanDetailController extends Controller
     {
         $penjualan = PenjualanModel::find($penjualan_id);
 
-        $barangs = BarangModel::all();
+        $barangs = BarangModel::withSum('stok', 'stok_jumlah')->get();
         return view('penjualanDetail.create_ajax')->with(['penjualan' => $penjualan, 'barangs' => $barangs]);
     }
 
@@ -390,17 +391,16 @@ class PenjualanDetailController extends Controller
         $rules = [
             'penjualan_id' => ['required'], // Dikirim dalam bentuk terenkripsi
             'barang_id'    => ['required', 'integer'],
-            'jumlah'       => ['required', 'integer'],
+            'jumlah'       => ['required', 'integer', 'min:1'], // minimal jumlah 1
             'harga'        => ['required', 'numeric'],
         ];
 
         $validator = Validator::make($request->all(), $rules);
-
         if ($validator->fails()) {
             return response()->json([
-                'status' => false, // response status, false: error/gagal, true: berhasil
-                'message' => 'Validasi Gagal',
-                'msgField' => $validator->errors() // pesan error validasi
+                'status'   => false,
+                'message'  => 'Validasi Gagal',
+                'msgField' => $validator->errors()
             ]);
         }
 
@@ -414,14 +414,49 @@ class PenjualanDetailController extends Controller
             ]);
         }
 
-        $data = $request->all();
-        $data['penjualan_id'] = $penjualan_id;
-        PenjualanDetailModel::create($data);
+        // Ambil stok barang berdasarkan barang_id
+        $stokBarang = StokModel::where('barang_id', $request->barang_id)->first();
 
-        return response()->json([
-            'status'  => true,
-            'message' => 'Data detail penjualan berhasil disimpan'
-        ]);
+        // Jika stok tidak ada atau stok_jumlah 0
+        if (!$stokBarang || $stokBarang->stok_jumlah < 1) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Stok barang tidak tersedia atau habis.'
+            ]);
+        }
 
+        // Jika jumlah yang diminta melebihi stok yang ada
+        if ($request->jumlah > $stokBarang->stok_jumlah) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Jumlah yang diminta melebihi stok yang tersedia.'
+            ]);
+        }
+
+        // Lakukan operasi dalam satu transaksi agar konsistensi data terjamin
+        DB::beginTransaction();
+        try {
+            // Update stok, kurangi stok_jumlah dengan jumlah yang dibeli
+            $stokBarang->stok_jumlah -= $request->jumlah;
+            $stokBarang->save();
+
+            // Simpan data penjualan detail
+            $data = $request->all();
+            $data['penjualan_id'] = $penjualan_id;
+            \App\Models\PenjualanDetailModel::create($data);
+
+            DB::commit();
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Data detail penjualan berhasil disimpan dan stok terupdate.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => 'Terjadi kesalahan saat menyimpan data. ' . $e->getMessage()
+            ]);
+        }
     }
 }
