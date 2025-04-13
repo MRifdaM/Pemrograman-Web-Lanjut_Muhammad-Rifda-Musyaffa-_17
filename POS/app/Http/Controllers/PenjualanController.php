@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\StokModel;
 use App\Models\UserModel;
+use App\Models\BarangModel;
 use Illuminate\Http\Request;
 use App\Models\PenjualanModel;
 use Illuminate\Support\Facades\DB;
+use App\Models\PenjualanDetailModel;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
@@ -359,10 +362,10 @@ class PenjualanController extends Controller
     public function create_ajax()
     {
         $users = UserModel::all();
-        return view('penjualan.create_ajax')->with('users', $users);
+        $barangs = BarangModel::withSum('stok', 'stok_jumlah')->get();
+        return view('penjualan.create_ajax')->with(['users' => $users, 'barangs' => $barangs]);
     }
 
-    // Simpan data penjualan baru
     public function store_ajax(Request $request)
     {
         $rules = [
@@ -370,25 +373,71 @@ class PenjualanController extends Controller
             'pembeli'           => ['required', 'string', 'max:100'],
             'penjualan_kode'    => ['required', 'string', 'max:20', 'unique:t_penjualan,penjualan_kode'],
             'penjualan_tanggal' => ['required', 'date'],
+            'details'           => ['required', 'array', 'min:1'],
+            'details.*.barang_id' => ['required', 'integer'],
+            'details.*.jumlah'    => ['required', 'integer', 'min:1'],
+            'details.*.harga'     => ['required', 'numeric'],
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json([
-                'status' => false, // response status, false: error/gagal, true: berhasil
-                'message' => 'Validasi Gagal',
-                'msgField' => $validator->errors() // pesan error validasi
+                'status'   => false,
+                'message'  => 'Validasi Gagal',
+                'msgField' => $validator->errors()
             ]);
         }
 
-        PenjualanModel::create($request->all());
+        DB::beginTransaction();
+        try {
+            $penjualan = PenjualanModel::create($request->only([
+                'user_id', 'pembeli', 'penjualan_kode', 'penjualan_tanggal'
+            ]));
 
-        return response()->json([
-            'status'  => true,
-            'message' => 'Data penjualan berhasil disimpan'
-        ]);
+            foreach ($request->details as $index => $detail) {
+                $stokBarang = StokModel::where('barang_id', $detail['barang_id'])->first();
 
+                if (!$stokBarang || $stokBarang->stok_jumlah < 1) {
+                    DB::rollBack();
+                    return response()->json([
+                        'status'  => false,
+                        'message' => 'Stok barang tidak tersedia atau habis pada baris ke-' . ($index + 1)
+                    ]);
+                }
+
+                if ($detail['jumlah'] > $stokBarang->stok_jumlah) {
+                    DB::rollBack();
+                    return response()->json([
+                        'status'  => false,
+                        'message' => 'Jumlah yang diminta melebihi stok yang tersedia pada baris ke-' . ($index + 1)
+                    ]);
+                }
+
+                $stokBarang->stok_jumlah -= $detail['jumlah'];
+                $stokBarang->save();
+
+                PenjualanDetailModel::create([
+                    'penjualan_id' => $penjualan->penjualan_id,
+                    'barang_id'    => $detail['barang_id'],
+                    'jumlah'       => $detail['jumlah'],
+                    'harga'        => $detail['harga'],
+                ]);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Data penjualan beserta detail berhasil disimpan'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => 'Terjadi kesalahan saat menyimpan data. ' . $e->getMessage()
+            ]);
+        }
     }
 
 
