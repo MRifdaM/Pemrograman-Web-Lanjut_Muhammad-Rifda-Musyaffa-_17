@@ -5,7 +5,7 @@
     <div class="card-header">
         <h3 class="card-title">{{ $page->title }}</h3>
         <div class="card-tools">
-            {{-- Tombol tambah detail penjualan, jika diperlukan --}}
+            <button onclick="modalAction('{{ url('/penjualan-detail/show_ajax/'. $penjualan->penjualan_id) }}')" class="btn btn-info btn-sm">Detail Penjualan</button>
             <a class="btn btn-sm btn-primary mt-1" href="{{ url('penjualan-detail/create/'. $penjualan->penjualan_id) }}">Tambah</a>
             <button onclick="modalAction('{{ url('/penjualan-detail/create_ajax/'. $penjualan->penjualan_id) }}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
         </div>

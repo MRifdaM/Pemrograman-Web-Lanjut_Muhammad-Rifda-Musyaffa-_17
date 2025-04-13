@@ -459,4 +459,23 @@ class PenjualanDetailController extends Controller
             ]);
         }
     }
+
+
+
+    public function show_ajax(string $penjualan_id)
+    {
+        $penjualanDetails = PenjualanDetailModel::select(
+            'detail_id',
+            'penjualan_id',
+            'barang_id',
+            'jumlah',
+            'harga'
+        )
+        ->with(['penjualan.user', 'barang']) // Pastikan relasi user pada penjualan juga disertakan jika ingin menampilkan nama pegawai
+        ->where('penjualan_id', $penjualan_id)
+        ->get();
+
+        return view('penjualanDetail.show_ajax', ['penjualanDetail' => $penjualanDetails]);
+    }
+
 }

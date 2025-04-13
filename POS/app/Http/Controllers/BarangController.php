@@ -485,4 +485,10 @@ class BarangController extends Controller
 
         return redirect('/');
     }
+
+    public function show_ajax(string $id){
+        $barang = BarangModel::with('kategori')->find($id);
+
+        return view('barang.show_ajax', ['barang' => $barang]);
+    }
 }
