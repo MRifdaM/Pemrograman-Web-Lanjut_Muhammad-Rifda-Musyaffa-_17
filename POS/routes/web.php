@@ -386,6 +386,7 @@ Route::middleware(['auth'])->group(function(){
             Route::post('/list', [PenjualanController::class, 'list']);
             Route::get('/create', [PenjualanController::class, 'create']);
             Route::post('/', [PenjualanController::class, 'store']);
+            Route::get('/{id}/show_ajax', [PenjualanController::class, 'show_ajax']);
             Route::get('/create_ajax', [PenjualanController::class, 'create_ajax']);
             Route::post('/ajax', [PenjualanController::class, 'store_ajax']);
             Route::get('/{id}/edit', [PenjualanController::class, 'edit']);
@@ -398,19 +399,4 @@ Route::middleware(['auth'])->group(function(){
         });
     });
 
-    Route::middleware(['authorize:ADM,MNG,STF,CSH'])->group(function(){
-        Route::group(['prefix' => 'penjualan-detail'], function () {
-            Route::get('/{penjualan_id}', [PenjualanDetailController::class, 'index']);
-            Route::post('/list/{penjualan_id}', [PenjualanDetailController::class, 'list']);
-            Route::get('/create/{penjualan_id}', [PenjualanDetailController::class, 'create']);
-            Route::post('/', [PenjualanDetailController::class, 'store']);
-            Route::get('/create_ajax/{penjualan_id}', [PenjualanDetailController::class, 'create_ajax']);
-            Route::post('/ajax', [PenjualanDetailController::class, 'store_ajax']);
-            Route::get('/show/{id}', [PenjualanDetailController::class, 'show']);
-            Route::get('/show_ajax/{penjualan_id}', [PenjualanDetailController::class, 'show_ajax']);
-            Route::get('/{id}/edit', [PenjualanDetailController::class, 'edit']);
-            Route::put("/{id}", [PenjualanDetailController::class, 'update']);
-            Route::delete('/{id}', [PenjualanDetailController::class, 'destroy']);
-        });
-    });
 });

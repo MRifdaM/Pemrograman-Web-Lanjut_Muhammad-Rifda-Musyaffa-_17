@@ -188,9 +188,7 @@ class PenjualanController extends Controller
             ->addIndexColumn() // kolom DT_RowIndex
             ->addColumn('aksi', function ($penjualans) {
                 // Tombol Detail, Edit, dan Hapus
-                $btn = '<a href="'.url('/penjualan-detail/' . $penjualans->penjualan_id).'"
-                            class="btn btn-info btn-sm">Detail</a> ';
-
+                $btn = '<button onclick="modalAction(\'' . url('/penjualan/' . $penjualans->penjualan_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
                 // $btn .= '<a href="'.url('/penjualan/' . $penjualans->penjualan_id . '/edit').'"
                 //             class="btn btn-warning btn-sm">Edit</a> ';
 
@@ -202,7 +200,6 @@ class PenjualanController extends Controller
                 //             onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">
                 //             Hapus
                 //           </button></form>';
-                $btn .= '<button onclick="modalAction(\'' . url('/penjualan/' . $penjualans->penjualan_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
                 $btn .= '<button onclick="modalAction(\'' . url('/penjualan/' . $penjualans->penjualan_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
 
                 return $btn;
@@ -440,49 +437,19 @@ class PenjualanController extends Controller
         }
     }
 
-
-    public function edit_ajax(string $id)
+    public function show_ajax($id)
     {
-        $penjualan = PenjualanModel::find($id);
-        $user = UserModel::select('user_id', 'username')->get();
-        return view('penjualan.edit_ajax', ['penjualan' => $penjualan, 'user' => $user]);
-    }
+        // Mengambil penjualan berdasarkan ID beserta relasi user dan penjualanDetail (kemudian masing-masing detail memuat relasi barang)
+        $penjualan = PenjualanModel::with(['user', 'penjualanDetail.barang'])->find($id);
 
-    public function update_ajax(Request $request, $id)
-    {
-        if ($request->ajax() || $request->wantsJson()) {
-            $rules = [
-                'user_id'           => ['required', 'integer'],
-                'pembeli'           => ['required', 'string', 'max:100'],
-                'penjualan_kode'    => ['required', 'string', 'max:20', 'unique:t_penjualan,penjualan_kode,'.$id.',penjualan_id'],
-                'penjualan_tanggal' => ['required', 'date'],
-            ];
-
-            $validator = Validator::make($request->all(), $rules);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'status'   => false,
-                    'message'  => 'Validasi gagal.',
-                    'msgField' => $validator->errors(),
-                ]);
-            }
-
-            $penjualan = PenjualanModel::find($id);
-            if ($penjualan) {
-                $penjualan->update($request->all());
-
-                return response()->json([
-                    'status'  => true,
-                    'message' => 'Data penjualan berhasil diupdate.',
-                ]);
-            }
-
-            return response()->json([
-                'status'  => false,
-                'message' => 'Data tidak ditemukan.',
-            ]);
+        if (!$penjualan) {
+            return redirect()->route('penjualan.index')
+                ->with('error', 'Data penjualan tidak ditemukan');
         }
-        return redirect('/');
+
+        // Jika terdapat detail penjualan, simpan dalam variabel. (View yang digunakan di contoh menerima variabel penjualanDetail.)
+        $penjualanDetail = $penjualan->penjualanDetail;  // Collection detail
+
+        return view('penjualan.show_ajax', ['penjualanDetail' => $penjualanDetail]);
     }
 }
