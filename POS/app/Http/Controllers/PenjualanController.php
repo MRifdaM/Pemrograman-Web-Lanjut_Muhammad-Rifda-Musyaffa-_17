@@ -439,17 +439,36 @@ class PenjualanController extends Controller
 
     public function show_ajax($id)
     {
-        // Mengambil penjualan berdasarkan ID beserta relasi user dan penjualanDetail (kemudian masing-masing detail memuat relasi barang)
         $penjualan = PenjualanModel::with(['user', 'penjualanDetail.barang'])->find($id);
 
-        if (!$penjualan) {
-            return redirect()->route('penjualan.index')
-                ->with('error', 'Data penjualan tidak ditemukan');
-        }
-
-        // Jika terdapat detail penjualan, simpan dalam variabel. (View yang digunakan di contoh menerima variabel penjualanDetail.)
-        $penjualanDetail = $penjualan->penjualanDetail;  // Collection detail
+        $penjualanDetail = $penjualan->penjualanDetail;
 
         return view('penjualan.show_ajax', ['penjualanDetail' => $penjualanDetail]);
     }
+
+    public function confirm_ajax($id)
+    {
+        $penjualan = PenjualanModel::with(['penjualanDetail.barang', 'user'])->find($id);
+        return view('penjualan.confirm_ajax', ['penjualan' => $penjualan]);
+    }
+
+    public function delete_ajax(Request $request, $id)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $penjualan = PenjualanModel::find($id);
+            if ($penjualan) {
+                $penjualan->delete();
+                return response()->json([
+                    'status'  => true,
+                    'message' => 'Data penjualan beserta detailnya berhasil dihapus'
+                ]);
+            } else {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Data penjualan tidak ditemukan'
+                ]);
+            }
+        }
+    }
+    
 }
