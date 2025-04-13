@@ -44,5 +44,17 @@ class UserModel extends Authenticatable
         return $this->hasMany(PenjualanModel::class, 'user_id', 'user_id');
     }
 
+    //==================================================Jobsheet 7=================================================
+    public function getRoleName(): string {
+        return $this->level->level_nama;
+    }
+
+    public function hasRole($role): bool {
+        return $this->level->level_kode == $role;
+    }
+
+    public function getRole(){
+        return $this->level->level_kode;
+    }
 
 }
