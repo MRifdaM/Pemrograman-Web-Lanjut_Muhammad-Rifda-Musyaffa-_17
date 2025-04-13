@@ -74,6 +74,36 @@
                     <p>Supplier</p>
                 </a>
             </li>
+            <li class="nav-header">Keluar</li>
+            <li class="nav-item">
+                <a href="#" id="logoutButton" class="nav-link">
+                    <i class="nav-icon fas fa-sign-out-alt"></i>
+                    <p>Logout</p>
+                </a>
+            </li>
         </ul>
     </nav>
 </div
+@push('js')
+    <script>
+        $(document).ready(function() {
+            $('#logoutButton').click(function(e) {
+                e.preventDefault(); // cegah aksi default
+                Swal.fire({
+                    title: 'Apakah anda yakin ingin logout?',
+                    text: "Anda akan keluar dari sistem!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Logout',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "{{ url('/logout') }}";
+                    }
+                });
+            });
+        });
+    </script>
+@endpush
