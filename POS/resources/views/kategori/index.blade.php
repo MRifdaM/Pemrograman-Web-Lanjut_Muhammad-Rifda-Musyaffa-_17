@@ -5,6 +5,7 @@
     <div class="card-header">
     <h3 class="card-title">{{ $page->title }}</h3>
     <div class="card-tools">
+        <button onclick="modalAction('{{ url('/kategori/import') }}')" class="btn btn-sm btn-info mt-1">Import Kategori</button>
         <a class="btn btn-sm btn-primary mt-1" href="{{ url('kategori/create') }}">Tambah</a>
         <button onclick="modalAction('{{ url('/kategori/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
     </div>
@@ -39,7 +40,6 @@
     var dataKategori;
     $(document).ready(function() {
         dataKategori = $('#table_kategori').DataTable({
-            // serverSide: true, jika ingin menggunakan server side processing
             serverSide: true,
             ajax: {
                 "url": "{{ url('kategori/list') }}",
@@ -49,7 +49,6 @@
             searchDelay: 1000,
             columns: [
             {
-                // nomor urut dari laravel datatable addIndexColumn()
                 data: "DT_RowIndex",
                 className: "text-center",
                 orderable: false,
@@ -57,9 +56,7 @@
             },{
                 data: "kategori_kode",
                 className: "",
-                // orderable: true, jika ingin kolom ini bisa diurutkan
                 orderable: true,
-                // searchable: true, jika ingin kolom ini bisa dicari
                 searchable: true
             },{
                 data: "kategori_nama",

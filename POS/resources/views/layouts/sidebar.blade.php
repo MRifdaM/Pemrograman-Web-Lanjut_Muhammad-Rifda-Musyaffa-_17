@@ -43,8 +43,8 @@
                     </a>
                 </li>
             @endif
+            <li class="nav-header">Data Barang</li>
             @if($currentUser && ($currentUser->hasRole('ADM') || $currentUser->hasRole('MNG')))
-                <li class="nav-header">Data Barang</li>
                 <li class="nav-item">
                     <a href="{{ url('/kategori') }}" class="nav-link {{ ($activeMenu ==
                     'kategori')? 'active' : '' }} ">
@@ -54,7 +54,6 @@
                 </li>
             @endif
             @if($currentUser && ($currentUser->hasRole('ADM') || $currentUser->hasRole('MNG') || $currentUser->hasRole('STF') || $currentUser->hasRole('CSH')))
-            <li class="nav-header">Data Barang</li>
                 <li class="nav-item">
                     <a href="{{ url('/barang') }}" class="nav-link {{ ($activeMenu ==
                     'barang')? 'active' : '' }} ">

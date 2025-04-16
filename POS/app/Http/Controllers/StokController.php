@@ -7,8 +7,10 @@ use App\Models\UserModel;
 use App\Models\BarangModel;
 use Illuminate\Http\Request;
 use App\Models\SupplierModel;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
@@ -475,6 +477,83 @@ class StokController extends Controller
         $stok = StokModel::with(['user', 'barang', 'supplier'])->find($id);
 
         return view('stok.show_ajax', ['stok' => $stok]);
+    }
+
+    public function import(){
+        return view('stok.import');
+    }
+
+    public function import_ajax(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+
+            $rules = [
+                // Validasi file harus xlsx, maksimal 1MB
+                'file_stok' => ['required', 'mimes:xlsx', 'max:1024']
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'   => false,
+                    'message'  => 'Validasi Gagal',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+
+            // Ambil file dari request
+            $file = $request->file('file_stok');
+
+            // Membuat reader untuk file excel dengan format Xlsx
+            $reader = IOFactory::createReader('Xlsx');
+            $reader->setReadDataOnly(true); // Hanya membaca data saja
+
+            $path = $file->getPathname();
+            $spreadsheet = $reader->load($path);
+            $sheet = $spreadsheet->getActiveSheet();
+
+            // Ambil data excel sebagai array
+            $data = $sheet->toArray(null, false, true, true);
+            $insert = [];
+             if (count($data) > 1) { // Jika data lebih dari 1 baris
+                foreach ($data as $baris => $value) {
+                    if ($baris > 1) { // Baris ke-1 adalah header, maka lewati
+
+                        $tanggal_masuk = is_numeric($value['D'])
+                        ? Date::excelToDateTimeObject($value['D'])->format('Y-m-d')
+                        : date('Y-m-d', strtotime($value['D']));
+
+
+                        $insert[] = [
+                            'barang_id'           => $value['A'],
+                            'user_id'             => $value['B'],
+                            'supplier_id'         => $value['C'],
+                            'stok_tanggal'  => $tanggal_masuk,
+                            'stok_jumlah'         => $value['E'],
+                            'created_at'           => now(),
+                        ];
+                    }
+                }
+
+                if (count($insert) > 0) {
+                    // Insert data ke database, jika data sudah ada, maka diabaikan
+                    StokModel::insertOrIgnore($insert);
+                }
+
+                return response()->json([
+                    'status'  => true,
+                    'message' => 'Data berhasil diimport'
+                ]);
+            } else {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Tidak ada data yang diimport'
+                ]);
+            }
+        }
+
+        return redirect('/');
     }
 
 }

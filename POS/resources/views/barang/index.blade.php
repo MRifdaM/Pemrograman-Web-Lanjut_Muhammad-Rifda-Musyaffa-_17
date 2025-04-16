@@ -5,6 +5,7 @@
     <div class="card-header">
         <h3 class="card-title">{{ $page->title }}</h3>
         <div class="card-tools">
+            <button onclick="modalAction('{{ url('/barang/import') }}')" class="btn btn-sm btn-info mt-1">Import Barang</button>
             <a class="btn btn-sm btn-primary mt-1" href="{{ url('barang/create') }}">Tambah</a>
             <button onclick="modalAction('{{ url('/barang/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
         </div>
@@ -94,7 +95,6 @@
                     searchable: true
                 },
                 {
-                    // Tampilkan nama kategori dari relasi
                     data: "kategori.kategori_nama",
                     orderable: false,
                     searchable: false
@@ -107,7 +107,6 @@
             ]
         });
 
-        // Saat filter berubah, reload DataTables
         $('#kategori_id').on('change', function() {
             dataBarang.ajax.reload();
         });
