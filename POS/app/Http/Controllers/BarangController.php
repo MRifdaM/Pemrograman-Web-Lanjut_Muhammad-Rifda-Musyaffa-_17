@@ -10,6 +10,7 @@ use Illuminate\Database\QueryException;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BarangController extends Controller
 {
@@ -185,7 +186,7 @@ class BarangController extends Controller
         // Filter data berdasarkan kategori_id
         $kategori_id = $request->input('kategori_id');
         if (!empty($kategori)) {
-            $barangs->where('kategori_id', $kategori_id);
+            $barangs->where('m_barang.kategori_id', $kategori_id);
         }
 
         return DataTables::of($barangs)
@@ -619,6 +620,28 @@ class BarangController extends Controller
 
         $writer->save('php://output'); //simpan file ke output
         exit; //keluar dari scriptA
+    }
+
+    public function export_pdf(){
+        $barang = BarangModel::select(
+            'kategori_id',
+            'barang_kode',
+            'barang_nama',
+            'harga_jual',
+            'harga_beli'
+        )
+        ->orderBy('kategori_id')
+        ->orderBy('barang_kode')
+        ->with('kategori')
+        ->get();
+
+        // use Barryvdh\DomPDF\Facade\Pdf;
+        $pdf = PDF::loadView('barang.export_pdf', ['barang' => $barang]);
+        $pdf->setPaper('A4', 'portrait'); // set ukuran kertas dan orientasi
+        $pdf->setOption("isRemoteEnabled", true); // set true jika ada gambar dari url
+        $pdf->render(); // render pdf
+
+        return $pdf->stream('Data Barang '.date('Y-m-d H-i-s').'.pdf');
     }
 
 }

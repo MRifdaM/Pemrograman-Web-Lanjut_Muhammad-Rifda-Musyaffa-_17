@@ -8,6 +8,7 @@
             <button onclick="modalAction('{{ url('/stok/import') }}')" class="btn btn-sm btn-info mt-1">Import Stok</button>
             {{-- <a class="btn btn-sm btn-primary mt-1" href="{{ url('stok/create') }}">Tambah</a> --}}
             <a href="{{ url('/stok/export_excel') }}" class="btn btn-sm btn-primary mt-1"><i class="fa fa-file-excel"></i> Export Stok</a>
+            <a href="{{ url('/stok/export_pdf') }}" class="btn btn-sm btn-warning mr-1"><i class="fa fa-file-pdf"></i> Export Stock</a>
             <button onclick="modalAction('{{ url('/stok/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
         </div>
     </div>
@@ -113,17 +114,17 @@
                 },
                 {
                     data: "barang.barang_nama",
-                    orderable: true,
+                    orderable: false,
                     searchable: true
                 },
                 {
                     data: "user.username",
-                    orderable: true,
+                    orderable: false,
                     searchable: true
                 },
                 {
                     data: "supplier.supplier_nama",
-                    orderable: true,
+                    orderable: false,
                     searchable: true
                 },
                 {

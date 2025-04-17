@@ -7,6 +7,7 @@
         <div class="card-tools">
             {{-- <a class="btn btn-sm btn-primary mt-1" href="{{ url('penjualan/create') }}">Tambah</a> --}}
             <a href="{{ url('/penjualan/export_excel') }}" class="btn btn-sm btn-primary mt-1"><i class="fa fa-file-excel"></i> Export Penjualan</a>
+            <a href="{{ url('/penjualan/export_pdf') }}" class="btn btn-sm btn-warning mr-1"><i class="fa fa-file-pdf"></i> Export Penjualan</a>
             <button onclick="modalAction('{{ url('/penjualan/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
         </div>
     </div>
@@ -92,7 +93,7 @@
             },
             {
                 data: "user.nama",
-                orderable: true,
+                orderable: false,
                 searchable: true
             },
             {

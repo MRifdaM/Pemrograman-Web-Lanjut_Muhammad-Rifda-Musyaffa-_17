@@ -12,6 +12,7 @@ use App\Models\PenjualanDetailModel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PenjualanController extends Controller
 {
@@ -201,6 +202,7 @@ class PenjualanController extends Controller
                 //             onclick="return confirm(\'Apakah Anda yakin menghapus data ini?\');">
                 //             Hapus
                 //           </button></form>';
+                $btn .= '<a href="' . url('/penjualan/' . $penjualans->penjualan_id . '/receipt_pdf') . '" class="btn btn-sm btn-warning mr-1">Cetak Struk</a>';
                 $btn .= '<button onclick="modalAction(\'' . url('/penjualan/' . $penjualans->penjualan_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
 
                 return $btn;
@@ -556,5 +558,34 @@ class PenjualanController extends Controller
 
         $writer->save('php://output');
         exit;
+    }
+
+    public function export_pdf(){
+        $penjualan = PenjualanModel::with(['user','penjualanDetail'])
+            ->orderBy('penjualan_id')
+            ->orderBy('penjualan_kode')
+            ->get();
+
+
+        // use Barryvdh\DomPDF\Facade\Pdf;
+        $pdf = PDF::loadView('penjualan.export_pdf', ['penjualan' => $penjualan]);
+        $pdf->setPaper('A4', 'portrait'); // set ukuran kertas dan orientasi
+        $pdf->setOption("isRemoteEnabled", true); // set true jika ada gambar dari url
+        $pdf->render(); // render pdf
+
+        return $pdf->stream('Data Supplier '.date('Y-m-d H-i-s').'.pdf');
+    }
+
+    public function export_receipt($id)
+    {
+        $penjualan = PenjualanModel::with(['user', 'penjualanDetail.barang'])
+            ->find($id);
+
+        $pdf = Pdf::loadView('penjualan.receipt', compact('penjualan'));
+        $pdf->setPaper('A6', 'portrait');
+        $pdf->setOption('isRemoteEnabled', true);
+
+        $filename = 'Struk_' . $penjualan->penjualan_kode . '.pdf';
+        return $pdf->stream($filename);
     }
 }
