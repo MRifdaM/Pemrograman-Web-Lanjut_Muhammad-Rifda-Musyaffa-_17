@@ -44,6 +44,7 @@
                     <th>ID</th>
                     <th>Kode Barang</th>
                     <th>Nama Barang</th>
+                    <th>Stok Barang</th>
                     <th>Kategori</th>
                     <th>Aksi</th>
                 </tr>
@@ -81,7 +82,7 @@
             searchDelay: 1000,
             columns: [
                 {
-                    data: "DT_RowIndex",
+                    data: "barang_id",
                     className: "text-center",
                     orderable: false,
                     searchable: false
@@ -93,6 +94,11 @@
                 },
                 {
                     data: "barang_nama",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "barang_stok",
                     orderable: true,
                     searchable: true
                 },

@@ -29,11 +29,6 @@
                     <small id="error-barang_nama" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
-                    <label>Stok Barang</label>
-                    <input type="number" name="barang_stok" id="barang_stok" class="form-control" required min="1">
-                    <small id="error-barang_stok" class="error-text form-text text-danger"></small>
-                </div>
-                <div class="form-group">
                     <label>Harga Beli</label>
                     <input value="" type="number" name="harga_beli" id="harga_beli" class="form-control" required>
                     <small id="error-harga_beli" class="error-text form-text text-danger"></small>
