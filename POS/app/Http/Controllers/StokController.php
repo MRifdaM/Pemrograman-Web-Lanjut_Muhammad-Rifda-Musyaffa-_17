@@ -349,7 +349,6 @@ class StokController extends Controller
         ]);
     }
 
-    // Simpan data stok baru
     public function store_ajax(Request $request)
     {
         if ($request->ajax() || $request->wantsJson()) {
@@ -357,11 +356,10 @@ class StokController extends Controller
             $rules = [
                 'barang_id'    => ['required', 'integer', 'exists:m_barang,barang_id'],
                 'user_id'      => ['required', 'integer', 'exists:m_user,user_id'],
-                'supplier_id'  => ['required', 'integer', 'exists:m_supplier,supplier_id'], // validasi supplier
+                'supplier_id'  => ['required', 'integer', 'exists:m_supplier,supplier_id'],
                 'stok_tanggal' => ['required', 'date'],
                 'stok_jumlah'  => ['required', 'integer', 'min:1'],
             ];
-
 
             $validator = Validator::make($request->all(), $rules);
 
@@ -373,12 +371,31 @@ class StokController extends Controller
                 ]);
             }
 
-            StokModel::create($request->all());
+            DB::beginTransaction(); // Mulai transaksi database
 
-            return response()->json([
-                'status'  => true,
-                'message' => 'Data stok berhasil disimpan.',
-            ]);
+            try {
+
+                StokModel::create($request->all());
+
+
+                BarangModel::where('barang_id', $request->barang_id)
+                    ->increment('barang_stok', $request->stok_jumlah);
+
+                DB::commit(); // Commit transaksi jika berhasil
+
+                return response()->json([
+                    'status'  => true,
+                    'message' => 'Data stok berhasil disimpan.',
+                ]);
+
+            } catch (\Exception $e) {
+                DB::rollBack(); // Rollback transaksi jika terjadi error
+
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Gagal menyimpan data: ' . $e->getMessage(),
+                ]);
+            }
         }
 
         return redirect('/');
@@ -399,14 +416,13 @@ class StokController extends Controller
         ]);
     }
 
-    // Update data stok
     public function update_ajax(Request $request, $id)
     {
         if ($request->ajax() || $request->wantsJson()) {
             $rules = [
                 'barang_id'    => ['required', 'integer', 'exists:m_barang,barang_id'],
                 'user_id'      => ['required', 'integer', 'exists:m_user,user_id'],
-                'supplier_id'  => ['required', 'integer', 'exists:m_supplier,supplier_id'], // validasi supplier
+                'supplier_id'  => ['required', 'integer', 'exists:m_supplier,supplier_id'],
                 'stok_tanggal' => ['required', 'date'],
                 'stok_jumlah'  => ['required', 'integer', 'min:1'],
             ];
@@ -421,25 +437,50 @@ class StokController extends Controller
                 ]);
             }
 
-            $stok = StokModel::find($id);
-            if ($stok) {
+            DB::beginTransaction(); // Mulai transaksi
+
+            try {
+                $stok = StokModel::find($id);
+
+                if (!$stok) {
+                    return response()->json([
+                        'status'  => false,
+                        'message' => 'Data tidak ditemukan.',
+                    ]);
+                }
+
+                // Simpan nilai stok lama sebelum diupdate
+                $oldStokJumlah = $stok->stok_jumlah;
+
                 $stok->update($request->all());
+
+                $diff = $request->stok_jumlah - $oldStokJumlah;
+
+                // Update stok barang hanya jika ada perubahan jumlah
+                if ($diff != 0) {
+                    BarangModel::where('barang_id', $request->barang_id)
+                        ->increment('barang_stok', $diff);
+                }
+
+                DB::commit(); // Commit transaksi
 
                 return response()->json([
                     'status'  => true,
                     'message' => 'Data stok berhasil diupdate.',
                 ]);
-            }
 
-            return response()->json([
-                'status'  => false,
-                'message' => 'Data tidak ditemukan.',
-            ]);
+            } catch (\Exception $e) {
+                DB::rollBack(); // Rollback ketika error
+
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Gagal mengupdate data: ' . $e->getMessage(),
+                ]);
+            }
         }
 
         return redirect('/');
     }
-
     public function confirm_ajax(string $id)
     {
         $stok = StokModel::find($id);
