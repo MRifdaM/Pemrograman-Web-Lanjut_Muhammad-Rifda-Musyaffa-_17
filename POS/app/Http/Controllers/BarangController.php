@@ -179,7 +179,8 @@ class BarangController extends Controller
             'barang_id',
             'kategori_id',
             'barang_kode',
-            'barang_nama'
+            'barang_nama',
+            'barang_stok'
         )
         ->with('kategori'); // relasi ke tabel kategori
 
@@ -381,6 +382,7 @@ class BarangController extends Controller
                 'kategori_id'  => ['required', 'integer'],
                 'barang_kode'  => ['required', 'string', 'min:3', 'max:10', 'unique:m_barang,barang_kode'],
                 'barang_nama'  => ['required', 'string', 'min:3', 'max:100'],
+                'barang_stok'  => ['required', 'integer', 'min:1'],
                 'harga_beli'   => ['required', 'numeric', 'min:0'],
                 'harga_jual'   => ['required', 'numeric', 'min:0']
             ];
@@ -420,6 +422,7 @@ class BarangController extends Controller
                 'kategori_id'  => ['required', 'integer'],
                 'barang_kode'  => ['required', 'string', 'min:3', 'max:10', 'unique:m_barang,barang_kode,' . $id . ',barang_id'],
                 'barang_nama'  => ['required', 'string', 'min:3', 'max:100'],
+                'barang_stok'  => ['required', 'integer', 'min:1'],
                 'harga_beli'   => ['required', 'numeric', 'min:0'],
                 'harga_jual'   => ['required', 'numeric', 'min:0']
             ];

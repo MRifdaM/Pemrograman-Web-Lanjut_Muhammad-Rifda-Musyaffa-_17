@@ -51,6 +51,12 @@
                         <small id="error-barang_nama" class="error-text form-text text-danger"></small>
                     </div>
                     <div class="form-group">
+                        <label>Stok Barang</label>
+                        <input type="number" name="barang_stok" id="barang_stok" class="form-control" required min="1"
+                                value="{{ $barang->barang_stok }}">
+                        <small id="error-barang_stok" class="error-text form-text text-danger"></small>
+                    </div>
+                    <div class="form-group">
                         <label>Harga Beli</label>
                         <input value="{{ $barang->harga_beli }}" type="number" name="harga_beli" id="harga_beli" class="form-control">
                         <small class="form-text text-muted"></small>
@@ -81,12 +87,17 @@
                     barang_nama: {
                         required: true,
                         minlength: 3,
-                        maxlength: 20
+                        maxlength: 100
+                    },
+                    barang_stok: {
+                        required: true,
+                        number: true,
+                        min: 1
                     },
                     harga_beli: {
-                    required: true,
-                    number: true,
-                    min: 0
+                        required: true,
+                        number: true,
+                        min: 0
                     },
                     harga_jual: {
                         required: true,

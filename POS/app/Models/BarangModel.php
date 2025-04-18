@@ -20,6 +20,7 @@ class BarangModel extends Model
         'kategori_id',
         'barang_kode',
         'barang_nama',
+        'barang_stok',
         'harga_beli',
         'harga_jual',
     ];

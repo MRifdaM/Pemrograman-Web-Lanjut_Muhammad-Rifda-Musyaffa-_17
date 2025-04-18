@@ -44,6 +44,10 @@
                     <td>{{ $barang->barang_nama }}</td>
                 </tr>
                 <tr>
+                    <th>Stok Barang</th>
+                    <td>{{ $barang->barang_stok }}</td>
+                </tr>
+                <tr>
                     <th>Harga Beli</th>
                     <td>Rp{{ number_format($barang->harga_beli, 0, ',', '.') }}</td>
                 </tr>
