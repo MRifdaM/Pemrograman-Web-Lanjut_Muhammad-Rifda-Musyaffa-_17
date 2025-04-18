@@ -382,7 +382,6 @@ class BarangController extends Controller
                 'kategori_id'  => ['required', 'integer'],
                 'barang_kode'  => ['required', 'string', 'min:3', 'max:10', 'unique:m_barang,barang_kode'],
                 'barang_nama'  => ['required', 'string', 'min:3', 'max:100'],
-                'barang_stok'  => ['required', 'integer', 'min:1'],
                 'harga_beli'   => ['required', 'numeric', 'min:0'],
                 'harga_jual'   => ['required', 'numeric', 'min:0']
             ];
@@ -397,7 +396,10 @@ class BarangController extends Controller
                 ]);
             }
 
-            BarangModel::create($request->all());
+            $data = $request->all();
+            $data['barang_stok'] = 0;
+
+            BarangModel::create($data);
 
             return response()->json([
                 'status' => true,
