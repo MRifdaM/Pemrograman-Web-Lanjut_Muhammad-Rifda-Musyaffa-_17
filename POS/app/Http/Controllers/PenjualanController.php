@@ -592,6 +592,92 @@ class PenjualanController extends Controller
         }
     }
 
+    public function export_excel()
+    {
+        // Ambil semua penjualan beserta relasi user dan detail->barang
+        $penjualans = PenjualanModel::with(['user', 'penjualanDetail.barang'])
+            ->orderBy('penjualan_tanggal')
+            ->get();
+
+        // Buat objek spreadsheet dan sheet pertama
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet1 = $spreadsheet->getActiveSheet();
+        $sheet1->setTitle('Master Penjualan');
+
+        // Header untuk sheet Master
+        $sheet1->setCellValue('A1', 'No');
+        $sheet1->setCellValue('B1', 'User');
+        $sheet1->setCellValue('C1', 'Pembeli');
+        $sheet1->setCellValue('D1', 'Kode Penjualan');
+        $sheet1->setCellValue('E1', 'Tanggal Penjualan');
+        $sheet1->getStyle('A1:E1')->getFont()->setBold(true);
+
+        // Isi data master
+        $row = 2;
+        $no = 1;
+        foreach ($penjualans as $penjualan) {
+            $sheet1->setCellValue("A{$row}", $no);
+            $sheet1->setCellValue("B{$row}", $penjualan->user->username);
+            $sheet1->setCellValue("C{$row}", $penjualan->pembeli);
+            $sheet1->setCellValue("D{$row}", $penjualan->penjualan_kode);
+            $sheet1->setCellValue("E{$row}", date('Y-m-d H:i:s', strtotime($penjualan->penjualan_tanggal)));
+            $no++;
+            $row++;
+        }
+
+        // Auto‑size kolom sheet1
+        foreach (range('A','E') as $col) {
+            $sheet1->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // Buat sheet kedua untuk detail
+        $sheet2 = $spreadsheet->createSheet();
+        $sheet2->setTitle('Detail Penjualan');
+
+        // Header untuk sheet Detail
+        $sheet2->setCellValue('A1', 'No');
+        $sheet2->setCellValue('B1', 'Kode Penjualan');
+        $sheet2->setCellValue('C1', 'Nama Barang');
+        $sheet2->setCellValue('D1', 'Jumlah');
+        $sheet2->setCellValue('E1', 'Harga');
+        $sheet2->getStyle('A1:E1')->getFont()->setBold(true);
+
+        // Isi data detail
+        $row = 2;
+        $no = 1;
+        foreach ($penjualans as $penjualan) {
+            foreach ($penjualan->penjualanDetail as $detail) {
+                $sheet2->setCellValue("A{$row}", $no);
+                $sheet2->setCellValue("B{$row}", $penjualan->penjualan_kode);
+                $sheet2->setCellValue("C{$row}", $detail->barang->barang_nama);
+                $sheet2->setCellValue("D{$row}", $detail->jumlah);
+                $sheet2->setCellValue("E{$row}", $detail->harga);
+                $no++;
+                $row++;
+            }
+        }
+
+        // Auto‑size kolom sheet2
+        foreach (range('A','E') as $col) {
+            $sheet2->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // Kirim header untuk download
+        $writer   = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $filename = 'Data_Penjualan_Detail_' . date('Y-m-d_H-i-s') . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="'. $filename .'"');
+        header('Cache-Control: max-age=0');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: '. gmdate('D, d M Y H:i:s') .' GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+
+        $writer->save('php://output');
+        exit;
+    }
+
     public function export_pdf(){
         $penjualan = PenjualanModel::with(['user','penjualanDetail'])
             ->orderBy('penjualan_id')
