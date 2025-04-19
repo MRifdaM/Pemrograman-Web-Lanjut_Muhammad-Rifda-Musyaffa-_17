@@ -132,16 +132,116 @@
     </body>
 </html> --}}
 @extends('layouts.template')
+
 @section('content')
 
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Halo, apa kabar!!!</h3>
-        <div class="card-tools"></div>
-    </div>
-    <div class="card-body">
-        Selamat datang semua, ini adalah halaman utama dari aplikasi ini.
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Dashboard</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3>{{ $thisWeekSalesCount }}</h3>
+                                <p>Penjualan Minggu Ini</p>
+                            </div>
+                            <div class="icon"><i class="ion ion-bag"></i></div>
+                            <a href="{{ url('penjualan') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3>{{ $totalProducts }}</h3>
+                                <p>Total Produk</p>
+                            </div>
+                            <div class="icon"><i class="ion ion-cube"></i></div>
+                            <a href="{{ url('barang') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-warning">
+                            <div class="inner">
+                                <h3>{{ $todaySalesCount }}</h3>
+                                <p>Penjualan Hari Ini</p>
+                            </div>
+                            <div class="icon"><i class="ion ion-bag"></i></div>
+                            <a href="{{ url('penjualan') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-danger">
+                            <div class="inner">
+                                <h3>{{ $lowStockCount }}</h3>
+                                <p>Barang Stok Rendah</p>
+                            </div>
+                            <div class="icon"><i class="ion ion-alert-circled"></i></div>
+                            <a href="{{ url('barang') }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
+<div class="col-md">
+    <div class="card card-success">
+        <div class="card-header"><h3 class="card-title">Penjualan Harian</h3></div>
+            <div class="card-body">
+                <div class="chart">
+                    <canvas id="dailySalesChart" style="min-height:300px; height:250px; max-height:250px; max-width:100%;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
+
+@push('js')
+<script>
+     $(function() {
+        const ctx = document.getElementById('dailySalesChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @json($dailyLabels),
+                datasets: [{
+                    label: 'Total Penjualan',
+                    data: @json($dailyValues),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            callback: function(value) {
+                                return 'Rp. ' + value.toLocaleString('id-ID');
+                            }
+                        }
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            const datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+                            const value = tooltipItem.yLabel;
+                            return datasetLabel + ': Rp. ' + value.toLocaleString('id-ID');
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+@endpush
