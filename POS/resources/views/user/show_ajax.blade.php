@@ -32,6 +32,14 @@
                     <td>{{ $user->user_id }}</td>
                 </tr>
                 <tr>
+                    <th>Profile Pengguna</th>
+                    <td>
+                        <img src="{{ asset('storage/' . ($user->foto_profile ?? '/uploads/profile/default-profile.jpg')) }}"
+                            class="img-thumbnail"
+                            style="width: 100px; height: 100px; object-fit: cover;">
+                    </td>
+                </tr>
+                <tr>
                     <th>Username Pengguna</th>
                     <td>{{ $user->username }}</td>
                 </tr>

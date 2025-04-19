@@ -21,6 +21,7 @@ class UserModel extends Authenticatable
         'username',
         'nama',
         'password',
+        'foto_profile'
     ];
 
     //  protected $fillable = ['level_id', 'username', 'nama'];

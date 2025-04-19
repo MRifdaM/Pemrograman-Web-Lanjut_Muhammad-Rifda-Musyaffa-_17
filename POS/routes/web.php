@@ -8,6 +8,7 @@ use App\Http\Controllers\StokController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\KategoriController;
@@ -259,6 +260,10 @@ Route::post('register', [AuthController::class, 'postRegister']);
 
 Route::middleware(['auth'])->group(function(){
     Route::get('/', [WelcomeController::class, 'index']);
+    Route::get('/profile', [ProfileController::class, 'index']);
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/update-photo', [ProfileController::class, 'updatePhoto'])->name('profile.update-photo');
 
     Route::middleware(['authorize:ADM,MNG'])->group(function(){
         Route::group(['prefix' => 'user'], function () {
@@ -425,7 +430,6 @@ Route::middleware(['auth'])->group(function(){
             Route::get('/export_excel', [PenjualanController::class, 'export_excel']);
             Route::get('/export_pdf', [PenjualanController::class, 'export_pdf']);
             Route::get('/{id}/receipt_pdf', [PenjualanController::class, 'export_receipt']);
-
         });
     });
 
