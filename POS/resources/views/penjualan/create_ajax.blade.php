@@ -13,17 +13,6 @@
             <div class="modal-body">
                 <!-- Data Penjualan -->
                 <div class="form-group">
-                    <label>Pengguna</label>
-                    <select name="user_id" id="user_id" class="form-control" required>
-                        <option value="">- Pilih Pengguna -</option>
-                        @foreach ($users as $user)
-                            <option value="{{ $user->user_id }}">{{ $user->username }}</option>
-                        @endforeach
-                    </select>
-                    <small id="error-user_id" class="error-text form-text text-danger"></small>
-                </div>
-
-                <div class="form-group">
                     <label>Pembeli</label>
                     <input type="text" name="pembeli" id="pembeli" class="form-control" required>
                     <small id="error-pembeli" class="error-text form-text text-danger"></small>
@@ -33,12 +22,6 @@
                     <label>Kode Penjualan</label>
                     <input type="text" name="penjualan_kode" id="penjualan_kode" class="form-control" required>
                     <small id="error-penjualan_kode" class="error-text form-text text-danger"></small>
-                </div>
-
-                <div class="form-group">
-                    <label>Tanggal Penjualan</label>
-                    <input type="datetime-local" name="penjualan_tanggal" id="penjualan_tanggal" class="form-control" required>
-                    <small id="error-penjualan_tanggal" class="error-text form-text text-danger"></small>
                 </div>
 
                 <!-- Bagian Detail Penjualan -->

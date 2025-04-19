@@ -368,10 +368,8 @@ class PenjualanController extends Controller
     public function store_ajax(Request $request)
     {
         $rules = [
-            'user_id'           => ['required', 'integer'],
             'pembeli'           => ['required', 'string', 'max:100'],
             'penjualan_kode'    => ['required', 'string', 'max:20', 'unique:t_penjualan,penjualan_kode'],
-            'penjualan_tanggal' => ['required', 'date'],
             'details'           => ['required', 'array', 'min:1'],
             'details.*.barang_id' => ['required', 'integer'],
             'details.*.jumlah'    => ['required', 'integer', 'min:1'],
@@ -390,9 +388,14 @@ class PenjualanController extends Controller
 
         DB::beginTransaction();
         try {
-            $penjualan = PenjualanModel::create($request->only([
-                'user_id', 'pembeli', 'penjualan_kode', 'penjualan_tanggal'
-            ]));
+
+            $dataPenjualan = $request->only([
+                'pembeli', 'penjualan_kode'
+            ]);
+            $dataPenjualan['user_id'] = auth()->id();
+            $dataPenjualan['penjualan_tanggal'] =  now();
+
+            $penjualan = PenjualanModel::create($dataPenjualan);
 
             foreach ($request->details as $index => $detail) {
                 $barang = BarangModel::where('barang_id', $detail['barang_id'])->first();
