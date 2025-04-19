@@ -118,7 +118,7 @@
                     searchable: true
                 },
                 {
-                    data: "user.username",
+                    data: "user.nama",
                     orderable: false,
                     searchable: true
                 },

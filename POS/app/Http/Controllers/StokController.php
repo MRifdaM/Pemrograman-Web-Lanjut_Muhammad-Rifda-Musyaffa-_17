@@ -355,7 +355,6 @@ class StokController extends Controller
 
             $rules = [
                 'barang_id'    => ['required', 'integer', 'exists:m_barang,barang_id'],
-                'user_id'      => ['required', 'integer', 'exists:m_user,user_id'],
                 'supplier_id'  => ['required', 'integer', 'exists:m_supplier,supplier_id'],
                 'stok_tanggal' => ['required', 'date'],
                 'stok_jumlah'  => ['required', 'integer', 'min:1'],
@@ -375,7 +374,10 @@ class StokController extends Controller
 
             try {
 
-                StokModel::create($request->all());
+                $data = $request->all();
+                $data['user_id'] = auth()->id();
+
+                StokModel::create($data);
 
 
                 BarangModel::where('barang_id', $request->barang_id)
