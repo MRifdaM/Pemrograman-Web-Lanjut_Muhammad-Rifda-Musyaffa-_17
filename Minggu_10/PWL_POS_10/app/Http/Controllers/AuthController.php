@@ -47,15 +47,15 @@ class AuthController extends Controller
 
     public function register()
     {
-        // $levels = LevelModel::select('level_id', 'level_nama')
-        //             ->where('level_kode', '!=', 'ADM')
-        //             ->get();
+        $levels = LevelModel::select('level_id', 'level_nama')
+                    ->where('level_kode', '!=', 'ADM')
+                    ->get();
         return view('auth.register');
     }
 
     public function postRegister(Request $request){
         $rules = [
-            // 'level_id' => 'required|exists:m_level,level_id',
+            'level_id' => 'required|exists:m_level,level_id',
             'username' => 'required|string|min:3|unique:m_user,username',
             'nama' => 'required|string|max:100',
             'password' => 'required|min:6|confirmed',
@@ -72,7 +72,7 @@ class AuthController extends Controller
         }
 
         UserModel::create([
-            'level_id' => 3,
+            'level_id' => $request->level_id,
             'username' => $request->username,
             'nama' => $request->nama,
             'password' => $request->password,

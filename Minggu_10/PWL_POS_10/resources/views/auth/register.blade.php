@@ -22,7 +22,7 @@
         <form action="{{ route('register') }}" method="POST" id="registerForm">
         @csrf
 
-        {{-- <div class="input-group mb-3">
+        <div class="input-group mb-3">
             <select name="level_id" class="form-control" required>
             <option value="">-- Pilih Level --</option>
             @foreach($levels as $level)
@@ -34,7 +34,7 @@
                 <span class="fas fa-user-tag"></span>
             </div>
             </div>
-        </div> --}}
+        </div>
 
         <!-- Username -->
         <div class="input-group mb-3">
