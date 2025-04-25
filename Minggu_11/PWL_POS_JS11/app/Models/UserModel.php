@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class UserModel extends Authenticatable implements JWTSubject
 {
@@ -33,7 +34,8 @@ class UserModel extends Authenticatable implements JWTSubject
         'username',
         'nama',
         'password',
-        'foto_profile'
+        'foto_profile',
+        'image'    //Js 11
     ];
 
     //  protected $fillable = ['level_id', 'username', 'nama'];
@@ -68,6 +70,14 @@ class UserModel extends Authenticatable implements JWTSubject
 
     public function getRole(){
         return $this->level->level_kode;
+    }
+
+    //==================================================Jobsheet 11=================================================
+    public function image(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($image) => url('storage/posts/' . $image),
+        );
     }
 
 }
