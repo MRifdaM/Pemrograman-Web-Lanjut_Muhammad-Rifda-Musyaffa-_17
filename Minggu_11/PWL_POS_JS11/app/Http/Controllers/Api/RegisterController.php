@@ -31,6 +31,7 @@ class RegisterController extends Controller
             'password' => bcrypt($request->password),
             'nama' => $request->nama,
             'level_id' => $request->level_id,
+            //'image' =>$request->image,
             'image' => $image->hashName(),
         ]);
 

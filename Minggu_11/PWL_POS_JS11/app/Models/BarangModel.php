@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,6 +24,7 @@ class BarangModel extends Model
         'barang_stok',
         'harga_beli',
         'harga_jual',
+        'image'
     ];
 
     // protected $fillable = [
@@ -43,5 +45,12 @@ class BarangModel extends Model
 
     public function penjualanDetail(): HasMany {
         return $this->hasMany(PenjualanDetailModel::class, 'barang_id', 'barang_id');
+    }
+
+    protected function image(): Attribute
+    {
+        return Attribute::make(
+            get: fn($image) => url('/storage/posts/' . $image),
+        );
     }
 }
